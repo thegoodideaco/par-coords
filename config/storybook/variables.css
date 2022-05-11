@@ -1,0 +1,36 @@
+:root {
+  /* CSS HSL */
+  --green-pantone: hsla(131, 76%, 36%, 1);
+  --azure-x-11-web-color: hsla(191, 41%, 95%, 1);
+  --prussian-blue: hsla(202, 68%, 19%, 1);
+  --blue-green: hsla(196, 56%, 46%, 1);
+  --rose-vale: hsla(359, 38%, 50%, 1);
+
+  --blue: #007bff;
+  --indigo: #6610f2;
+  --purple: #6f42c1;
+  --pink: #e83e8c;
+  --red: #dc3545;
+  --orange: #fd7e14;
+  --yellow: #ffc107;
+  --green: #28a745;
+  --teal: #20c997;
+  --cyan: #17a2b8;
+  --white: #fff;
+  --gray: #6c757d;
+  --gray-dark: #343a40;
+  --primary: #007bff;
+  --secondary: #6c757d;
+  --success: #28a745;
+  --info: #17a2b8;
+  --warning: #ffc107;
+  --danger: #dc3545;
+  --light: #f8f9fa;
+  --dark: #343a40;
+
+  --breakpoint-xs: 0;
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 992px;
+  --breakpoint-xl: 1200px;
+}

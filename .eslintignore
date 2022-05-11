@@ -1,0 +1,8 @@
+/dist/**
+/dist-modern/**
+/node_modules/**
+/public/**
+/**/*.ts
+/**/*stories.js
+storybook-init-framework-entry.js
+generated-stories-entry.js

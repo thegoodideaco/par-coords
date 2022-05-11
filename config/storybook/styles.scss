@@ -1,0 +1,14 @@
+@import './demo';
+
+html,
+body,
+.sbdocs-preview {
+  color: #ffffff;
+  background-color: #172329;
+  position: relative;
+  font-family: 'Ubuntu';
+}
+
+button, select {
+  cursor: pointer;
+}

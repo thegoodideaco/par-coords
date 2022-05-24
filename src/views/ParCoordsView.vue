@@ -1,61 +1,76 @@
 <template>
   <div class="bg-gray-800 text-gray-100 w-full h-full">
-    <!-- Top Nav -->
-    <div class="data-loader input inline-flex gap-2 p-3">
-      <!-- Select -->
-      <csv-select
-        v-model="test"
-        :placeholder="'select me'"
-        @before:load="loading=true"
-        @input="loading = false" />
+    <div class="top-header text-center grid justify-center">
+      <h1>
+        Coord-o-matic
+      </h1>
 
-      <!-- Upload button -->
-      <data-loader
-        v-model="test"
-        class="px-3 py-2 rounded bg-blue-400 cursor-pointer text-white"
-        @before:load="loading=true"
-        @input="loading = false">
-        Select
-      </data-loader>
-    </div>
+      <h1 class="text-xs">
+        Interactive parallel coordinates using virtually any dataset.
+      </h1>
 
-    <!-- Scrubbers -->
-    <div>
-      <input
-        v-model.number="maxLines"
-        type="range"
-        step="1"
-        min="10"
-        max="2000">
-
-      <input
-        v-model.number="offset"
-        type="range"
-        step="1"
-        min="0"
-        :max="dataLength">
-
-      <input
-        v-model.number="height"
-        type="range"
-        step="1"
-        :min="300"
-        :max="900">
-    </div>
-
-    <div class="info">
-      Total Size: {{ dataLength | asNumber }}
-
-      <button @click="parCoordComponent.clearFilters()">
-        Clear
+      <button>
+        Create your own
       </button>
+
+      <button class="link">
+        How does this work?
+      </button>
+
+      <!-- Top Nav -->
+      <div class="data-loader input inline-flex gap-2 p-3">
+        <!-- Select -->
+        <csv-select
+          v-model="test"
+          :placeholder="'select me'"
+          @before:load="loading=true"
+          @input="loading = false" />
+        <!-- Upload button -->
+        <data-loader
+          v-model="test"
+          class="px-3 py-2 rounded bg-blue-400 cursor-pointer text-white"
+          @before:load="loading=true"
+          @input="loading = false">
+          Select
+        </data-loader>
+      </div>
+      <!-- Scrubbers -->
+      <div>
+        <input
+          v-model.number="maxLines"
+          type="range"
+          step="1"
+          min="10"
+          max="2000">
+        <input
+          v-model.number="offset"
+          type="range"
+          step="1"
+          min="0"
+          :max="dataLength">
+        <input
+          v-model.number="height"
+          type="range"
+          step="1"
+          :min="300"
+          :max="900">
+      </div>
+      <!-- Info / Clear -->
+      <div class="info">
+        Total Size: {{ dataLength | asNumber }}
+        <button @click="parCoordComponent.clearFilters()">
+          Clear
+        </button>
+      </div>
     </div>
 
+    <!-- Par Coords -->
     <template v-if="summary">
       <div class="p-16 select-none">
         <par-coords
           v-if="!loading"
           ref="parCoordComponent"
+          class="m-auto"
           v-bind="{width, height, ...lineStyleSettings}"
           :max-lines="maxLines"
           :line-offset="offset"
@@ -73,13 +88,14 @@
 </template>
 
 <script>
+import ColorDropdown from '@/components/dataviz/inputs/ColorDropdown.vue'
 import ParCoords from '@/components/dataviz/ParCoords/ParCoords.vue'
 import CsvSelect from '@/components/inputs/CsvSelect.vue'
 import DataLoader from '@/components/inputs/DataLoader.vue'
 import chroma from 'chroma-js'
 import { extent } from 'd3-array'
 import { scaleQuantize, scaleSequentialPow } from 'd3-scale'
-import { interpolateWarm } from 'd3-scale-chromatic'
+import { interpolateRainbow, interpolateWarm } from 'd3-scale-chromatic'
 import { shuffle } from 'lodash'
 import { computed, defineComponent, ref, shallowRef, watchPostEffect } from 'vue-demi'
 export default defineComponent({
@@ -87,7 +103,8 @@ export default defineComponent({
   components: {
     CsvSelect,
     ParCoords,
-    DataLoader
+    DataLoader,
+    ColorDropdown
   },
   setup() {
     const parCoordComponent = ref()
@@ -179,7 +196,7 @@ export default defineComponent({
           }
 
           return prev
-        }, []).filter(val => new Set(Float64Array.from(dataset.value, r => r[val])).size > 5)
+        }, []).filter(val => new Set(Float64Array.from(dataset.value, r => r[val])).size > 1)
       }
     })
 
@@ -208,7 +225,7 @@ export default defineComponent({
     },
     lineStyleSettings() {
       const s = scaleSequentialPow()
-        .interpolator(interpolateWarm)
+        .interpolator(interpolateRainbow)
         .domain([
           0,
           1

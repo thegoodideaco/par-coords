@@ -1,5 +1,5 @@
 <template>
-  <div class="flex relative">
+  <div class="inline-flex relative">
     <select
       id="csv_select"
       v-model="localValue"

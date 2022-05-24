@@ -99,7 +99,7 @@ const baseView = (args, {
       </div>
     </div>
     `,
-    props:    Object.keys(argTypes)
+    props:    Object.keys(args)
   }
 }
 

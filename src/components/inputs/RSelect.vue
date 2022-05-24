@@ -50,7 +50,9 @@ export default defineComponent({
       type:     Array,
       required: true
     },
-    value:  String,
+    value: String,
+
+    /** @type {Vue.PropOptions<(record: any, index: number, records: record[]) => string | number} */
     filter: {
       type:     Function,
       required: false,

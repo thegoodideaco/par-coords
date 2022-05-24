@@ -22,13 +22,16 @@ We should be able to get some useful information about our current filtering to 
 
 - Showing Dataset Name, Amount of records
 - Amount currently filtered
-- Quartiles of each dimension column, to find outliers
+- Quartiles of each dimension column, to find outliers, and to normalize the yScales
 - Total / filtered extents of columns being filtered
+- Averages of each column
 
 Some ui to help customize the appearance:
 
-- Sorting columns
+- Ordering columns
+- Removing columns
 - Sorting column order
+- Providing alphanumerical dimensions
 - Adjusting line thickness
 - Adjusting line color
 - Adjusting line opacity
@@ -60,9 +63,11 @@ Each column will also have ticks that should provide nicely spaced out values
 
 These columns should contain a brush and a tick component, should emit events based on it's range selection
 
-### Line Renderer
+### Line Renderer ✔
 
-The line renderer will display all of the records values. To make it performant, we will be using the canvas and requestAnimation to continuously draw each line.
+The line renderer will display all of the records values.
+
+SVG for now, but want to build on webgl
 
 Coloring, stroke size, and other style attributes should be extendable.
 

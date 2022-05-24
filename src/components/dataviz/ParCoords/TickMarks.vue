@@ -1,6 +1,5 @@
 <template>
   <div
-    v-once
     class="ticks select-none"
     :class="{'tick-marks--vertical': direction === 'vertical'}"
     :style="customStyles">
@@ -194,7 +193,7 @@ export default {
      * @type {() => number[]}
      */
     scaleTicks() {
-      return [...this.scale.ticks(this.ticks)]
+      return [...this.localScale.ticks(this.ticks)]
     },
 
     customStyles() {
@@ -265,7 +264,7 @@ export default {
     tickTransform(tick) {
       const prop = this.direction === 'vertical' ? 'translateY' : 'translateX'
       return {
-        transform: `${prop}(${this.scale(tick)}px)`
+        transform: `${prop}(${this.localScale(tick)}px)`
       }
     }
   }

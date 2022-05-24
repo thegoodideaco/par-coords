@@ -21,13 +21,27 @@
 </template>
 
 <script>
-import { line } from 'd3-shape'
+import { curveMonotoneX, line } from 'd3-shape'
 import { curveMethods } from '@/utils/curveMethods'
+import { scaleLinear, scalePoint } from 'd3-scale'
+import { capitalize } from 'lodash'
 export default {
   props: {
     records: {
       type:    Array,
       default: () => []
+    },
+    fields: {
+      type:    Array,
+      default: () => []
+    },
+    xScale: {
+      type:    Function,
+      default: scalePoint()
+    },
+    yScales: {
+      type:    Array,
+      default: () => [scaleLinear()]
     },
     color: {
       type: [
@@ -50,27 +64,29 @@ export default {
       ],
       default: 1
     },
-    xAccessor: {
-      type:    Function,
-      default: r => r[0]
-    },
-    yAccessor: {
-      type:    Function,
-      default: r => r[1]
-    },
     lowQuality: {
       type:    Boolean,
       default: false
+    },
+    curve: {
+      type: [
+        String,
+        Function
+      ],
+      default: curveMonotoneX
     }
-
   },
   computed: {
+    transformedList() {},
     /** @type {() => d3.Line} */
     lineGen() {
-      return line()
-        .curve(curveMethods.curveMonotoneX)
-        .x(this.xAccessor)
-        .y(this.yAccessor)
+      const curveMethod = typeof this.curve === 'function'
+        ? this.curve
+        : curveMethods[`curve${capitalize(this.curve)}`]
+
+      return line().curve(curveMethod || curveMethods.curveMonotoneX)
+      // .x(this.xAccessor)
+      // .y(this.yAccessor)
     },
     /** @type {() => ((r, i: number, records: r[]) => string))} */
     colorFn() {
@@ -86,20 +102,33 @@ export default {
     }
   },
   methods: {
+    getRecordXY(record, fields) {
+      const values = Array.from(fields, (f) => record[f])
+
+      return Array.from(values, (v, i) => {
+        const x = this.xScale(this.fields[i])
+        const y = this.yScales[i]?.(v) ?? 0
+
+        return [
+          x,
+          y
+        ]
+      })
+    },
     generateLine(record) {
-      return this.lineGen(record)
+      return this.lineGen(this.getRecordXY(record, this.fields))
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-  path {
-    vector-effect: non-scaling-stroke;
-    shape-rendering: optimizeSpeed;
+path {
+  vector-effect: non-scaling-stroke;
+  shape-rendering: optimizeSpeed;
 
-    .hi-def & {
-      shape-rendering: geometricPrecision;
-    }
+  .hi-def & {
+    shape-rendering: geometricPrecision;
   }
+}
 </style>

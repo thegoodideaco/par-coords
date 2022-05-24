@@ -4,7 +4,7 @@ import DimensionColumn from "./DimensionColumn.vue";
 import TickMarks from './TickMarks.vue'
 import YBrush from './YBrush.vue'
 
-import records from "./records.json";
+import records from "@/components/demo/records.json";
 const r = records[0];
 
 /**
@@ -22,7 +22,7 @@ const meta = {
     width: 40,
     height: 600,
     min: 0,
-    max: Math.random() * 1e6,
+    max: ~~(Math.random() * 1e6),
     format: ',.3~s'
   },
   parameters: {

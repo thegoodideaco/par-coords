@@ -7,9 +7,9 @@ import './styles.scss'
 // import  './trello'
 import { themes } from '@storybook/theming'
 
-Vue.prototype.toJSON = function () {
-  return this
-}
+// Vue.prototype.toJSON = function () {
+//   return this
+// }
 
 /** @type {import('@storybook/addons').Parameters} */
 export const parameters = {

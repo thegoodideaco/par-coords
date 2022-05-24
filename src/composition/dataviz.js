@@ -54,7 +54,7 @@ export function useCrossfilterOld(dataset, dimensions) {
    */
   const scales = computed(() => Array.from(extents.value, (e) => {
     return scalePow()
-      .exponent(0.25)
+      .exponent(1)
       .domain(e).nice()
   }))
 

@@ -1,14 +1,18 @@
 <template>
-  <div class="inline-block">
-    <div class="data-loader input inline-flex">
+  <div class="bg-gray-800 text-gray-100 w-full h-full">
+    <!-- Top Nav -->
+    <div class="data-loader input inline-flex gap-2 p-3">
+      <!-- Select -->
       <csv-select
         v-model="test"
         :placeholder="'select me'"
         @before:load="loading=true"
         @input="loading = false" />
 
+      <!-- Upload button -->
       <data-loader
         v-model="test"
+        class="px-3 py-2 rounded bg-blue-400 cursor-pointer text-white"
         @before:load="loading=true"
         @input="loading = false">
         Select
@@ -28,31 +32,41 @@
         v-model.number="offset"
         type="range"
         step="1"
-        min="10"
-        :max="dataLength - maxLines">
+        min="0"
+        :max="dataLength">
+
+      <input
+        v-model.number="height"
+        type="range"
+        step="1"
+        :min="300"
+        :max="900">
     </div>
 
     <div class="info">
       Total Size: {{ dataLength | asNumber }}
+
+      <button @click="parCoordComponent.clearFilters()">
+        Clear
+      </button>
     </div>
 
     <template v-if="summary">
-      <div class="p-16">
+      <div class="p-16 select-none">
         <par-coords
           v-if="!loading"
           ref="parCoordComponent"
-          :width="1400"
+          v-bind="{width, height, ...lineStyleSettings}"
           :max-lines="maxLines"
           :line-offset="offset"
           :dataset="dataset"
-          :fields="numericalKeys"
-          v-bind="lineStyleSettings" />
-      </div>
-      <div
-        v-for="(item, key) in summary"
-        :key="key"
-        :class="{'text-blue-600': item.numerical}">
-        {{ key }}: {{ item.domain }}
+          :fields="numericalKeys">
+          <template #footer="{field}">
+            <small class="label transform -rotate-45">
+              {{ field }}
+            </small>
+          </template>
+        </par-coords>
       </div>
     </template>
   </div>
@@ -63,12 +77,11 @@ import ParCoords from '@/components/dataviz/ParCoords/ParCoords.vue'
 import CsvSelect from '@/components/inputs/CsvSelect.vue'
 import DataLoader from '@/components/inputs/DataLoader.vue'
 import chroma from 'chroma-js'
-import { extent, rank } from 'd3-array'
-import { interpolateRgb } from 'd3-interpolate'
-import { scaleLinear, scaleQuantile, scaleQuantize, scaleSequential } from 'd3-scale'
-import { interpolateCividis } from 'd3-scale-chromatic'
+import { extent } from 'd3-array'
+import { scaleQuantize, scaleSequentialPow } from 'd3-scale'
+import { interpolateWarm } from 'd3-scale-chromatic'
 import { shuffle } from 'lodash'
-import { computed, defineComponent, provide, ref, shallowRef, watchEffect, watchPostEffect } from 'vue-demi'
+import { computed, defineComponent, ref, shallowRef, watchPostEffect } from 'vue-demi'
 export default defineComponent({
   name:       'ParCoordsView',
   components: {
@@ -83,13 +96,16 @@ export default defineComponent({
     const dataLength = computed(() => parCoordComponent.value?.totalFiltered)
     const loading = ref(false)
 
-    const maxLines = ref(1000)
+    const maxLines = ref(500)
 
     const keys = computed(() => {
       if (test.value?.data.length) {
         return Object.keys(test.value.data[0])
       }
     })
+
+    const width = ref(1024)
+    const height = ref(500)
 
     const randomColor = chroma.random().css()
 
@@ -103,7 +119,7 @@ export default defineComponent({
             max
           ] = extent(test.value.data, r => isNumerical ? +r[k] ?? 0 : r[k])
 
-          const validDimension = isNumerical && (isFinite(+min) && isFinite(+max))
+          const validDimension = isNumerical && (isFinite(+min) && isFinite(+max)) && min !== max
 
           return validDimension
             ? [
@@ -158,12 +174,12 @@ export default defineComponent({
           ] = cur
           const isNumerical = !isNaN(+value)
 
-          if (isNumerical) {
+          if (isNumerical && prev.length <= 15) {
             prev.push(key)
           }
 
           return prev
-        }, []).filter(val => val)
+        }, []).filter(val => new Set(Float64Array.from(dataset.value, r => r[val])).size > 5)
       }
     })
 
@@ -179,7 +195,9 @@ export default defineComponent({
       dataset,
       numericalKeys,
       maxLines,
-      randomColor
+      randomColor,
+      width,
+      height
     }
   },
   computed: {
@@ -189,10 +207,16 @@ export default defineComponent({
         .range(chroma.scale(chroma.brewer.GnBu).colors(10, 'hex'))
     },
     lineStyleSettings() {
+      const s = scaleSequentialPow()
+        .interpolator(interpolateWarm)
+        .domain([
+          0,
+          1
+        ])
       return {
-        color:     (r, i) => i < this.dataLength / 2 ? 'red' : 'green',
-        opacity:   0.25,
-        thickness: 0.5
+        color:     (r, i, arr) => s(i / arr.length),
+        opacity:   0.5,
+        thickness: 1
       }
     }
   }

@@ -16,7 +16,7 @@
           <slot
             name="header"
             v-bind="{field: d, index: i}">
-            {{ d }}
+            <!-- {{ d }} -->
           </slot>
         </div>
 
@@ -45,7 +45,7 @@
           <slot
             name="footer"
             v-bind="{field: d, index: i, value: filters[i]}">
-            {{ d }}
+            <!-- {{ d }} -->
           </slot>
         </div>
       </div>
@@ -54,7 +54,11 @@
     <!-- Line renderer here -->
     <par-coord-line-renderer
       class="absolute top-0 left-0 w-full h-full pointer-events-none"
-      :records="topLines"
+      :records="topList"
+      :fields="fields"
+      :x-scale="xScale"
+      :y-scales="yScales"
+      :curve="$attrs.curve"
       v-bind="{color, thickness, opacity}" />
 
     <!-- <pre class="fixed p-2 top-0 left-0 text-xs">
@@ -123,17 +127,24 @@ export default defineComponent({
   },
 
   setup(props) {
+    const heightRef = computed(() => props.height)
+
     /** @type {typeof import('./records.json')} */
     const ds = typeof props.dataset === 'function'
       ? props.dataset()
       : props.dataset
+
+    const size = computed(() => [
+      props.width,
+      props.height
+    ])
 
     const {
       cf,
       dimensions,
       scales: yScales,
       extents
-    } = inject('useCrossfilter', useCrossfilterOld(ds, props.fields))
+    } = inject('useCrossfilter', useCrossfilterOld(ds, props.fields, heightRef))
 
     const {
       totalFiltered
@@ -171,7 +182,7 @@ export default defineComponent({
     )
 
     /** @type {import('vue-demi').Ref<number>} */
-    const heightRef = ref(props.height)
+
     watch(heightRef, updateYScales, { immediate: true })
 
     const filters = ref(new Array(props.fields.length))
@@ -182,6 +193,11 @@ export default defineComponent({
         _r[1] += 1e-8
       }
       dimensions.value[index].filter(_r)
+    }
+
+    function clearFilters() {
+      filters.value = new Array(props.fields.length)
+      dimensions.value.forEach(d => d.filterAll())
     }
 
     const getItemLinePoints = computed(() => {
@@ -199,6 +215,7 @@ export default defineComponent({
       cf,
       dimensions,
       xScale,
+      clearFilters,
       yScales,
       filters,
       extents,
@@ -232,9 +249,11 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .par-coords {
-  position: relative;
-  width: var(--par-width);
-  height: var(--par-height);
+      position: relative;
+    width: var(--par-width);
+    height: var(--par-height);
+    background-color: #1b2942;
+    background-image: linear-gradient(0deg, #0c1625, #21103b52);
 
   .brushes__brush-container {
     height: 100%;
@@ -256,5 +275,6 @@ export default defineComponent({
     top: 100%;
     transform: translateX(-50%);
   }
+
 }
 </style>

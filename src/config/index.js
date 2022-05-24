@@ -2,11 +2,16 @@ import Vue from 'vue'
 import * as demi from 'vue-demi'
 import VueCompositionApi, * as composition from '@vue/composition-api'
 import './styles'
+import './global-components'
 
 import axios from 'axios'
 import {
   csvParse, format
 } from 'd3'
+
+Vue.prototype.toJSON = function () {
+  return this
+}
 
 Vue.use(VueCompositionApi)
 

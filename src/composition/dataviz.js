@@ -1,6 +1,6 @@
 import { computed, readonly, ref, shallowRef } from 'vue-demi'
 import crossfilter from 'crossfilter2'
-import { scaleLinear, scalePow } from 'd3'
+import { scalePow } from 'd3'
 import { tryOnScopeDispose } from '@vueuse/core'
 
 /**

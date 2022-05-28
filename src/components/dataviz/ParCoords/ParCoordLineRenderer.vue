@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { curveBumpX, curveMonotoneX, line } from 'd3-shape'
+import { line } from 'd3-shape'
 import { curveMethods } from '@/utils/curveMethods'
 import { scaleLinear, scalePoint } from 'd3-scale'
 import { capitalize } from 'lodash'
@@ -74,7 +74,7 @@ export default {
         Function,
         Object
       ],
-      default: curveBumpX
+      default: curveMethods.curveBumpX
     }
   },
   computed: {

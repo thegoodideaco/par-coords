@@ -32,7 +32,7 @@ setup(props, ctx) {
   const newScale = computed(() => scaleLinear()
   .domain([
     ctx.attrs.minDomain,
-    ctx.attrs.maxdomain
+    ctx.attrs.maxDomain
   ])
   .range([
     ctx.attrs.minRange,
@@ -59,7 +59,7 @@ setup(props, ctx) {
 template: `
 <div>
 
-<div>{{scaleHelper.}}</div>
+<div>{{scaleHelper}}</div>
 <pre class="mb-64">{{$props}}</pre>
 
 

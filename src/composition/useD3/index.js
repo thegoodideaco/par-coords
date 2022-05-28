@@ -1,5 +1,5 @@
 import { scaleLinear } from 'd3'
-import { computed, reactive, ref, shallowReactive, toRef, unref } from 'vue-demi'
+import { computed, ref, unref } from 'vue-demi'
 
 export function useScale(baseScale = scaleLinear()) {
   const domainMin = ref(0)

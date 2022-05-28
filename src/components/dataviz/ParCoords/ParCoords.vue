@@ -226,7 +226,8 @@ export default defineComponent({
       topLines,
       offsetAmount,
       offset,
-      getItemLinePoints
+      getItemLinePoints,
+      size
     }
 
     Object.assign(window, {

@@ -18,9 +18,8 @@
 </template>
 
 <script>
-import { useScale } from '@/composition/useD3'
 import { scaleLinear } from 'd3-scale'
-import { defineComponent, proxyRefs } from 'vue-demi'
+import { defineComponent } from 'vue-demi'
 export default defineComponent({
   props: {
     scale: {
@@ -28,7 +27,7 @@ export default defineComponent({
       default: scaleLinear()
     }
   },
-  setup(props) {
+  setup(_props) {
 
   }
 })

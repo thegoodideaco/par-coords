@@ -29,10 +29,11 @@
     "vuedraggable": "^2.24.3"
   },
   "devDependencies": {
-    "@storybook/addon-a11y": "^6.4.22",
-    "@storybook/addon-essentials": "^6.0.26",
-    "@storybook/addon-links": "^6.0.26",
-    "@storybook/vue": "^6.0.26",
+    "@storybook/addon-a11y": "^6.5.5",
+    "@storybook/addon-essentials": "^6.5.5",
+    "@storybook/addon-links": "^6.5.5",
+    "@storybook/core": "^6.5.5",
+    "@storybook/vue": "^6.5.5",
     "@types/d3": "^7.1.0",
     "@types/lodash": "^4.14.182",
     "@vue/cli-plugin-babel": "~4.5.17",

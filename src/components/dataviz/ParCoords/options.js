@@ -8,21 +8,20 @@ export const colorsets = {
 
 export const lineOptions  = {
   thickness: {
-    min: .2,
+    min: 0.2,
     max: 3
   }
 }
-
 
 /**
  * Provide a reactive config object for custom settings
  * @param {import('crossfilter2').Crossfilter} cfInstance
  */
-export function useParCoordConfig(cfInstance) {
+export function useParCoordConfig(_cfInstance) {
   return {
     lineThickness: 1,
     lineOpacity:   1,
     lineColor:     'green',
-    lineCurve:
+    lineCurve:     curveMethods.curveBumpX
   }
 }

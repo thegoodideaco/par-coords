@@ -2,20 +2,22 @@
   <div
     class="par-coords shadow-2xl"
     :style="styleVars">
-    <div
-      class="brushes absolute z-10">
+    <div class="brushes absolute z-10">
       <div
         v-for="(d, i) in fields"
         :key="`col-${i}`"
         class="brushes__brush-container absolute top-0 left-0"
-        :style="{left: `${xScale(d)}px`}">
+        :style="{ left: `${xScale(d)}px` }">
         <!-- Header -->
         <div
           class="text-center"
-          style="transform: translateX(-50%) translateY(-100%); margin-top: -10px;">
+          style="
+            transform: translateX(-50%) translateY(-100%);
+            margin-top: -10px;
+          ">
           <slot
             name="header"
-            v-bind="{field: d, index: i}">
+            v-bind="{ field: d, index: i }">
             <!-- {{ d }} -->
           </slot>
         </div>
@@ -44,7 +46,7 @@
         <div class="par-footer">
           <slot
             name="footer"
-            v-bind="{field: d, index: i, value: filters[i]}">
+            v-bind="{ field: d, index: i, value: filters[i] }">
             <!-- {{ d }} -->
           </slot>
         </div>
@@ -59,7 +61,7 @@
       :x-scale="xScale"
       :y-scales="yScales"
       :curve="$attrs.curve"
-      v-bind="{color, thickness, opacity}" />
+      v-bind="{ color, thickness, opacity }" />
 
     <!-- <pre class="fixed p-2 top-0 left-0 text-xs">
       info area {{ totalFiltered }} - {{ topList }}
@@ -130,9 +132,8 @@ export default defineComponent({
     const heightRef = computed(() => props.height)
 
     /** @type {typeof import('./records.json')} */
-    const ds = typeof props.dataset === 'function'
-      ? props.dataset()
-      : props.dataset
+    const ds =
+      typeof props.dataset === 'function' ? props.dataset() : props.dataset
 
     const size = computed(() => [
       props.width,
@@ -144,16 +145,21 @@ export default defineComponent({
       dimensions,
       scales: yScales,
       extents
-    } = inject('useCrossfilter', useCrossfilterOld(ds, props.fields, heightRef))
+    } = inject(
+      'useCrossfilter',
+      useCrossfilterOld(ds, props.fields, heightRef)
+    )
 
-    const {
-      totalFiltered
-    } = useGroupAll(cf)
+    const { totalFiltered } = useGroupAll(cf)
 
     const amountRef = computed(() => props.maxLines)
     const offsetRef = computed(() => props.lineOffset)
 
-    const { topList, amount: offsetAmount, offset } = useTopList(cf, dimensions.value[0], {
+    const {
+      topList,
+      amount: offsetAmount,
+      offset
+    } = useTopList(cf, dimensions.value[0], {
       amount: amountRef,
       offset: offsetRef
     })
@@ -171,14 +177,15 @@ export default defineComponent({
       })
     }
 
-    const xScale = computed(() => scalePoint()
-      .domain(props.fields)
-      .range([
-        0,
-        props.width
-      ])
-      .round(true)
-      .padding(0)
+    const xScale = computed(() =>
+      scalePoint()
+        .domain(props.fields)
+        .range([
+          0,
+          props.width
+        ])
+        .round(true)
+        .padding(0)
     )
 
     /** @type {import('vue-demi').Ref<number>} */
@@ -197,20 +204,23 @@ export default defineComponent({
 
     function clearFilters() {
       filters.value = new Array(props.fields.length)
-      dimensions.value.forEach(d => d.filterAll())
+      dimensions.value.forEach((d) => d.filterAll())
     }
 
     const getItemLinePoints = computed(() => {
       const fields = props.fields
 
       /** @param {typeof ds[0]} item */
-      return item => Array.from(fields, (f, i) => [
-        xScale.value(f),
-        yScales.value[i](dimensions.value[i].accessor(item))
-      ])
+      return (item) =>
+        Array.from(fields, (f, i) => [
+          xScale.value(f),
+          yScales.value[i](dimensions.value[i].accessor(item))
+        ])
     })
 
-    const topLines = computed(() => Array.from(topList.value, getItemLinePoints.value))
+    const topLines = computed(() =>
+      Array.from(topList.value, getItemLinePoints.value)
+    )
     const refObj = {
       cf,
       dimensions,
@@ -250,11 +260,11 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .par-coords {
-      position: relative;
-    width: var(--par-width);
-    height: var(--par-height);
-    background-color: #1b2942;
-    background-image: linear-gradient(0deg, #0c1625, #21103b52);
+  position: relative;
+  width: var(--par-width);
+  height: var(--par-height);
+  background-color: #1b2942;
+  background-image: linear-gradient(0deg, #0c1625, #21103b52);
 
   .brushes__brush-container {
     height: 100%;
@@ -271,11 +281,10 @@ export default defineComponent({
   }
 
   .par-footer {
-    padding-top: .5rem;
+    padding-top: 0.5rem;
     position: absolute;
     top: 100%;
     transform: translateX(-50%);
   }
-
 }
 </style>

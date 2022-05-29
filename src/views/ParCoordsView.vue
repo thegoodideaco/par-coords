@@ -95,7 +95,7 @@ import DataLoader from '@/components/inputs/DataLoader.vue'
 import chroma from 'chroma-js'
 import { extent } from 'd3-array'
 import { scaleQuantize, scaleSequentialPow } from 'd3-scale'
-import { interpolateRainbow, interpolateWarm } from 'd3-scale-chromatic'
+import { interpolateRainbow } from 'd3-scale-chromatic'
 import { shuffle } from 'lodash'
 import { computed, defineComponent, ref, shallowRef, watchPostEffect } from 'vue-demi'
 export default defineComponent({
@@ -196,7 +196,7 @@ export default defineComponent({
           }
 
           return prev
-        }, []).filter(val => new Set(Float64Array.from(dataset.value, r => r[val])).size > 1)
+        }, []).filter(val => new Set(Float64Array.from(dataset.value, r => r[val])).size > 2)
       }
     })
 

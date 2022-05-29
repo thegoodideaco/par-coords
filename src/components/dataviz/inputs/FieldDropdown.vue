@@ -28,7 +28,8 @@ export default defineComponent( {
     return {
       fields,
       input,
-      output
+      output,
+      cf
     }
   }
 })

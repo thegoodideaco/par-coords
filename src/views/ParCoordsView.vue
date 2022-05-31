@@ -84,6 +84,9 @@
         </par-coords>
       </div>
     </template>
+
+    <!-- Adjustments -->
+    <tweak-pane class="fixed top-5 right-5" />
   </div>
 </template>
 

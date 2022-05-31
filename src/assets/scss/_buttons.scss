@@ -1,0 +1,27 @@
+.btn {
+    padding: .5rem 1.5rem;
+    display: inline-block;
+    cursor: pointer;
+    user-select: none;
+
+    &-primary {
+        background-color: #111;
+        // color: #fef;
+        color:#6bbdff;
+
+        border-radius: 7px;
+        background-color: rgb(17, 17, 17);
+
+        &:hover,
+        &:active,
+        &:focus {
+            background-color: lighten(#111, 2%);
+        }
+          
+    }
+
+    &-link {
+        font-size: .75rem;
+        color:#42a5f5;
+    }
+}

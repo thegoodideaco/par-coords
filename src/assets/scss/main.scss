@@ -1,4 +1,6 @@
 @import './helpers';
+@import './fonts';
+@import './buttons';
 
 a {
     color: rgb(48, 48, 161);
@@ -6,5 +8,6 @@ a {
 
 html,
 body {
-
+background-color: #1f2936;
+color: rgb(243, 243, 243);
 }

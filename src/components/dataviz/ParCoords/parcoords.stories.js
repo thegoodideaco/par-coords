@@ -53,8 +53,8 @@ const meta = {
     color: {
       control: {
         type: "select",
-        options: colorOptions,
       },
+      options: colorOptions,
     },
     width: {
       control: {
@@ -75,16 +75,16 @@ const meta = {
     colorizeOn: {
       control: {
         type: "select",
-        options: columnFields,
       },
+      options: columnFields,
     },
     curve: {
       control: {
         type: "select",
-        options: Object.keys(curveMethods).filter(
-          (k) => !k.endsWith("Closed") && !k.endsWith("Open")
-        ),
       },
+      options: Object.keys(curveMethods).filter(
+        (k) => !k.endsWith("Closed") && !k.endsWith("Open")
+      ),
     },
   },
 };
@@ -145,7 +145,7 @@ export const defaultView = (args, { argTypes }) =>
     },
     props: Object.keys(argTypes).filter((k) => !["tick"].includes(k)),
     template: `
-    <div class="m-auto pt-40 px-32 max-w-7xl" style="min-width: 700px" ref="el">
+    <div class="m-auto pt-40 px-32 max-w-7xl select-none" style="min-width: 700px" ref="el">
     <par-coords
       ref="par"
       v-bind="$props"

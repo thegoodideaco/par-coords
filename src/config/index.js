@@ -45,15 +45,18 @@ if (process.env.NODE_ENV === 'development') {
 
   Object.assign(window, {
     dev: {
-      d3:     require('d3'),
-      d3ar:   require('d3-array'),
+      d3:                 require('d3'),
+      d3ar:               require('d3-array'),
       composition,
       demi,
       CSV_PATHS,
       loadCsv,
+      vueUse:             require('@vueuse/core'),
       Vue,
-      cf:     require('crossfilter2').default,
-      chroma: require('chroma-js')
+      cf:                 require('crossfilter2').default,
+      chroma:             require('chroma-js'),
+      Papa:               require('papaparse'),
+      usePapaParseLoader: require('@/composition/useCsv').usePapaParseLoader
     }
   })
 }

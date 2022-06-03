@@ -1,75 +1,42 @@
-# grouping-example
+# Automatic Parallel Coordinate Plots
 
-## Things to do
+![example](public%5Css1.png)
 
-- Filter columns that have one unique value.
-- Limit the total amount of columns that can be made.
-- Cleanup main code and pass composables better.
-- Cleanup the main UI layout, add areas for inputs, table display
-- Create instructions modal
+## Concept
 
-- Make composables for crossfilter logic
-  - Creating crossfilter
-    - Optional onFilter param
-  - Create dimension
-    - reactive top or bottom lists (records)
-  - Create Dimension Group
-    - reactive top or bottom lists (aggregates)
+The idea of a parallel coordinate chart is to _visualize large multidimensional sets of records._
 
-## Missing features
+Generally we are used to looking at tabular data in cells. We have rows and columns, and can sort and filter, but only see a fixed amount of records at any given time. Instead, we can use a parallel coordinate chart to see everything at once, to give us immediate insights at a glance.
 
-We should be able to get some useful information about our current filtering to display.
+Each column represents a `dimension` of the records that are numerical or chronological in value. Ticks are displayed on each column to show the range of values, with formatting based on the type of data it represents (i.e. number, date).
 
-- Showing Dataset Name, Amount of records
-- Amount currently filtered
-- Quartiles of each dimension column, to find outliers, and to normalize the yScales
-- Total / filtered extents of columns being filtered
-- Averages of each column
+Lines are then drawn for every filtered record in order to visually see correlations and other patterns of the data as a whole.
 
-Some ui to help customize the appearance:
+## Loading any data
 
-- Ordering columns
-- Removing columns
-- Sorting column order
-- Providing alphanumerical dimensions
-- Adjusting line thickness
-- Adjusting line color
-- Adjusting line opacity
-- Line curvature
-- Top offset / limit
+In order to use different datasets automatically, there are some rules:
 
-Additional functionality:
+> ### **Values cannot be undefined or NaN**
+>
+> Values must be naturally sortable so they have a designated position on the y axis. Empty or NaN values cannot be sorted
 
-- Saving filtered data
-- Searching based on categorical values
-- Custom eval input to provide advanced style adjustments functions
-- Clearing all filters
+> ### **Values of a dimension must be the same type**
+>
+> A dimension of numbers should not have dates or strings mixed in with them.
 
-## Par coords ✔
+> ### **Maximum amount of columns**
+>
+> Datasets could possibly have thousands of columns, we need to determine the best ones to use and limit the total amount of dimensions that can be made.
 
-The par coords component is made up of the following:
+The first thing we do is sample 1000 records and determine the field types.
 
-### Brushes ✔
+If fields are numeric or chronological, we choose the fields with the most unique values, and the least amount of null values.
 
-Each column will const of a brush, that will allow the user to select a vertical range.
+Once we identify the dimensions to use, we create them inside of an empty crossfilter instance.
 
-We should extend this component to be used for x, y, and both x y. But can integrate vertical brushing first
+Next, we process the entire dataset in chunks. Each chunk is analyzed and cleaned, then added to crossfilter before loading the next chunk. When crossfilter adds these records, each dimension should update to give us new extents and summaries
 
-### Ticks ✔
-
-Each column will also have ticks that should provide nicely spaced out values
-
-### Field Columns ✔
-
-These columns should contain a brush and a tick component, should emit events based on it's range selection
-
-### Line Renderer ✔
-
-The line renderer will display all of the records values.
-
-SVG for now, but want to build on webgl
-
-Coloring, stroke size, and other style attributes should be extendable.
+Once we know the full extent of each dimension, we dispose of dimensions with 1 unique value, and start drawing the lines. Lines are cleared and redrawn if the data is filtered, chart is resized, or styling effects change. We don't want to start drawing lines as data is being added, because the extents will change so rapidly.
 
 ## Project setup
 

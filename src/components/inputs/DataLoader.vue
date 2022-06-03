@@ -47,6 +47,10 @@ export default defineComponent({
     filter: {
       type:    String,
       default: '.tsv,.csv,.json'
+    },
+    disableFormat: {
+      type:    Boolean,
+      default: false
     }
   },
 
@@ -89,16 +93,18 @@ export default defineComponent({
 
         let formatter
 
-        switch (fileType) {
-        case 'csv':
-          formatter = csvParse
-          break
-        case 'tsv':
-          formatter = tsvParse
-          break
-        case 'json':
-          formatter = JSON.parse
-          break
+        if (!this.disableFormat) {
+          switch (fileType) {
+          case 'csv':
+            formatter = csvParse
+            break
+          case 'tsv':
+            formatter = tsvParse
+            break
+          case 'json':
+            formatter = JSON.parse
+            break
+          }
         }
 
         // const data = ev.target.result

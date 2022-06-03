@@ -50,9 +50,6 @@ export default {
     YBrush
   },
   props: {
-    /**
-     * @type {() => [number, number]}
-     */
     value: {
       type: Array
     },
@@ -87,6 +84,7 @@ export default {
       ],
       default: ',.3~s'
     },
+
     scale: {
       type: Function
     }

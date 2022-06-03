@@ -34,7 +34,8 @@ export function useCrossfilter(dataset) {
 
 /**
  * Creates a reactive groupAll
- * @param {import('crossfilter2').Crossfilter} cfInstance
+ * @param {import('crossfilter2').Crossfilter<T>} cfInstance
+ * @param {((record: T) => number)} summarizer
  */
 export function useGroupAll(cfInstance, summarizer) {
   const ga = shallowRef(cfInstance.groupAll())

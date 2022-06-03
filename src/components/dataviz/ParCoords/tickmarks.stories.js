@@ -39,7 +39,9 @@ const mainSetup = {
       }
     },
     format: {
-      control: 'select',
+      control: {
+        type: 'select',
+      },
       options: [
         '$,.1s',
         '-$,.1f',
@@ -49,6 +51,7 @@ const mainSetup = {
         '%x',
         '%b'
       ]
+
 
     },
     round: {

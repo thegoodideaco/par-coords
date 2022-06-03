@@ -25,7 +25,7 @@ export function useCrossfilterOld(dataset, dimensions) {
      * Force string fields to be numerical
      */
     if (typeof strOrFn === 'string') {
-      return cf.dimension((r) => +r[strOrFn] || 0)
+      return cf.dimension((r) => isFinite(+r[strOrFn]) ? +r[strOrFn] : 0)
     } else {
       if (typeof strOrFn.field === 'string') {
         return cf.dimension((r) => +r[strOrFn.field] || 0)

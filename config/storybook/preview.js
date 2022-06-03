@@ -1,3 +1,5 @@
+// @ts-check
+
 import Vue from 'vue'
 import '../../src/config'
 import {  INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
@@ -6,20 +8,25 @@ import './variables.css'
 import './styles.scss'
 // import  './trello'
 import { themes } from '@storybook/theming'
+import toReact from '@egoist/vue-to-react'
 
-// Vue.prototype.toJSON = function () {
-//   return this
-// }
+Vue.prototype.toJSON = function () {
+  return this
+}
 
 /** @type {import('@storybook/addons').Parameters} */
 export const parameters = {
 
   docs: {
-    // inlineStories: true,
-    container:    DocsContainer,
-    page:         DocsPage,
-    theme:        themes.normal,
-    iframeHeight: 200
+    prepareForInline: (storyFn, { args }) => {
+      const Story = toReact(storyFn())
+      return <Story {...args} />
+    },
+    inlineStories: false,
+    container:     DocsContainer,
+    page:          DocsPage,
+    theme:         themes.dark,
+    iframeHeight:  500
   },
   toolbar: {
     icon:  'circlehollow',
@@ -33,32 +40,21 @@ export const parameters = {
   viewport: {
     viewports: INITIAL_VIEWPORTS
   },
-  backgrounds: {
-    // default: 'Dark',
-    values: [
-      {
-        name:  'Light',
-        value: '#e9e9e9'
-      },
-      {
-        name:  'Dark',
-        value: '#353535'
-      }
-    ]
-  },
+  // backgrounds: {
+  //   // default: 'Dark',
+  //   values: [
+  //     {
+  //       name:  'Light',
+  //       value: '#e9e9e9'
+  //     },
+  //     {
+  //       name:  'Dark',
+  //       value: '#353535'
+  //     }
+  //   ]
+  // },
   options: {
-    storySort: {
-      method: 'alphabetical',
-      order:  [
-        'Introduction'
-        // [
-        //   'Crossfilter',
-        //   ['Dimension Chart']
-        // ]
-      ]
-    },
     showPanel: true
-
   },
   layout: 'fullscreen'
 }

@@ -5,7 +5,7 @@
     <div class="brushes absolute z-10">
       <div
         v-for="(d, i) in fields"
-        :key="`col-${i}`"
+        :key="d"
         class="brushes__brush-container absolute top-0 left-0"
         :style="{ left: `${xScale(d)}px` }">
         <!-- Header -->
@@ -26,7 +26,6 @@
           ref="columns"
           v-model="filters[i]"
           class="par-column"
-          :scale="yScales[i]"
           :min="yScales[i].domain()[0]"
           :max="yScales[i].domain()[1]"
           :accessor="d"
@@ -61,10 +60,13 @@
       :x-scale="xScale"
       :y-scales="yScales"
       :curve="$attrs.curve"
+      :low-quality="true"
       v-bind="{ color, thickness, opacity }" />
 
-    <!-- <pre class="fixed p-2 top-0 left-0 text-xs">
-      info area {{ totalFiltered }} - {{ topList }}
+    <!-- <pre
+      v-if="topList"
+      class="fixed p-2 top-0 left-0 text-xs pointer-events-none">
+      info area {{ totalFiltered }} - {{ topList.slice(0, 2) }} - avg price {{ (sumPrice / totalFiltered) | asNumber }}
     </pre> -->
   </div>
 </template>
@@ -152,6 +154,8 @@ export default defineComponent({
 
     const { totalFiltered } = useGroupAll(cf)
 
+    const { totalFiltered: sumPrice } = useGroupAll(cf, r => +r.price || 0)
+
     const amountRef = computed(() => props.maxLines)
     const offsetRef = computed(() => props.lineOffset)
 
@@ -237,7 +241,8 @@ export default defineComponent({
       offsetAmount,
       offset,
       getItemLinePoints,
-      size
+      size,
+      sumPrice
     }
 
     Object.assign(window, {
@@ -260,11 +265,11 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .par-coords {
-  position: relative;
   width: var(--par-width);
   height: var(--par-height);
   background-color: #1b2942;
   background-image: linear-gradient(0deg, #0c1625, #21103b52);
+  contain: layout;
 
   .brushes__brush-container {
     height: 100%;

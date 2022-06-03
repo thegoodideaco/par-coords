@@ -1,8 +1,8 @@
 import { defineComponent, ref, watchEffect } from "vue-demi";
 import { syncRefs } from "@vueuse/core";
 import DimensionColumn from "./DimensionColumn.vue";
-import TickMarks from './TickMarks.vue'
-import YBrush from './YBrush.vue'
+import TickMarks from "./TickMarks.vue";
+import YBrush from "./YBrush.vue";
 
 import records from "@/components/demo/records.json";
 const r = records[0];
@@ -13,17 +13,27 @@ const r = records[0];
 const meta = {
   title: "components/DimensionColumn",
   component: DimensionColumn,
-  subcomponents: {
-    TickMarks,
-    YBrush
-  },
+
   args: {
     accessor: (r) => +r.liveness || 0,
     width: 40,
     height: 600,
     min: 0,
     max: ~~(Math.random() * 1e6),
-    format: ',.3~s'
+    format: ",.3~s",
+  },
+  argTypes: {
+    height: {
+      control: {
+        type: "range",
+        min: 100,
+        max: 1000,
+        step: 1,
+      },
+    },
+    scale: {
+      control: false,
+    },
   },
   parameters: {
     layout: "centered",
@@ -31,26 +41,16 @@ const meta = {
   },
 };
 
-export const mainView = (args, { argTypes }) =>
-  defineComponent({
-    props: Object.keys(argTypes),
-    setup() {
-      const v = ref();
-      const vv = ref();
-      // syncRefs(vv, v);
-
-      /** @type {(keyof r)[]} */
-      const keys = ["acousticness", "danceability", "energy"];
-
-      return {
-        v,
-        vv,
-      };
-    },
-    components: {
-      DimensionColumn,
-    },
-    template: `
+/** @type {import('@storybook/vue').Story} */
+export const mainView = (args, {argTypes}) => ({
+  data: () => ({
+    v: null,
+  }),
+  props: Object.keys(argTypes),
+  components: {
+    DimensionColumn,
+  },
+  template: `
   <div class="p-5 flex items-center gap-10">
 
     <DimensionColumn v-bind="$props" v-model="v" />
@@ -60,6 +60,6 @@ export const mainView = (args, { argTypes }) =>
 </pre>
   </div>
   `,
-  });
+});
 
 export default meta;

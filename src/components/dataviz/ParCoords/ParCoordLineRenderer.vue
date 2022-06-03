@@ -25,7 +25,8 @@ import { line } from 'd3-shape'
 import { curveMethods } from '@/utils/curveMethods'
 import { scaleLinear, scalePoint } from 'd3-scale'
 import { capitalize } from 'lodash'
-export default {
+import { defineComponent } from 'vue-demi'
+export default defineComponent({
   props: {
     records: {
       type:    Array,
@@ -77,6 +78,11 @@ export default {
       default: curveMethods.curveBumpX
     }
   },
+  setup(props) {
+    return {
+      props
+    }
+  },
   computed: {
     transformedList() {},
     /** @type {() => d3.Line} */
@@ -108,7 +114,7 @@ export default {
 
       return Array.from(values, (v, i) => {
         const x = this.xScale(this.fields[i])
-        const y = this.yScales[i]?.(v) ?? 0
+        const y = this.yScales[i]?.(+v ?? 0)
 
         return [
           x,
@@ -120,12 +126,12 @@ export default {
       return this.lineGen(this.getRecordXY(record, this.fields))
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>
 path {
-  vector-effect: non-scaling-stroke;
+  // vector-effect: non-scaling-stroke;
   shape-rendering: optimizeSpeed;
 
   .hi-def & {

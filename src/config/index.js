@@ -56,7 +56,8 @@ if (process.env.NODE_ENV === 'development') {
       cf:                 require('crossfilter2').default,
       chroma:             require('chroma-js'),
       Papa:               require('papaparse'),
-      usePapaParseLoader: require('@/composition/useCsv').usePapaParseLoader
+      usePapaParseLoader: require('@/composition/useCsv').usePapaParseLoader,
+      kmeans:             require('ml-kmeans')
     }
   })
 }

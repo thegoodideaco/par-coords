@@ -3,6 +3,7 @@
     class="line-renderer"
     :class="{'hi-def': !lowQuality}">
     <svg
+      v-if="!useCanvas"
       class="pointer-events-none"
       width="100%"
       height="100%">
@@ -17,6 +18,13 @@
         :d="generateLine(record)" />
 
     </svg>
+
+    <canvas
+      v-else
+      ref="canvas"
+      class="w-full h-full absolute">
+      <!-- line rendering -->
+    </canvas>
   </div>
 </template>
 
@@ -25,9 +33,14 @@ import { line } from 'd3-shape'
 import { curveMethods } from '@/utils/curveMethods'
 import { scaleLinear, scalePoint } from 'd3-scale'
 import { capitalize } from 'lodash'
-import { defineComponent } from 'vue-demi'
+import { computed, defineComponent, ref, watchEffect } from 'vue-demi'
+import chroma from 'chroma-js'
 export default defineComponent({
   props: {
+    useCanvas: {
+      type:    Boolean,
+      default: false
+    },
     records: {
       type:    Array,
       default: () => []
@@ -79,21 +92,54 @@ export default defineComponent({
     }
   },
   setup(props) {
+    const canvas = ref()
+
+    const width = computed(() => props.xScale.range()[1])
+    const height = computed(() => props.yScales[0].range()[0])
+
+    watchEffect(() => {
+      if (canvas.value) {
+        canvas.value.width = width.value
+        canvas.value.height = height.value
+      }
+    })
+
+    const clearCanvas = () => {
+      if (canvas.value) {
+        /** @type {CanvasRenderingContext2D} */
+        const ctx = canvas.value.getContext('2d')
+
+        if (ctx) {
+          ctx.clearRect(0, 0, width.value, height.value)
+        }
+      }
+    }
+
     return {
-      props
+      props,
+      canvas,
+      width,
+      height,
+      clearCanvas
     }
   },
   computed: {
-    transformedList() {},
     /** @type {() => d3.Line} */
     lineGen() {
       const curveMethod = typeof this.curve === 'function'
         ? this.curve
         : curveMethods[`curve${capitalize(this.curve)}`]
 
-      return line().curve(curveMethod || curveMethods.curveMonotoneX)
-      // .x(this.xAccessor)
-      // .y(this.yAccessor)
+      const gen = line().curve(curveMethod || curveMethods.curveMonotoneX)
+
+      /** @type {HTMLCanvasElement} */
+      const el = this.canvas
+      if (el) {
+        const ctx = el.getContext('2d')
+        gen.context(ctx)
+      }
+
+      return gen
     },
     /** @type {() => ((r, i: number, records: r[]) => string))} */
     colorFn() {
@@ -124,6 +170,49 @@ export default defineComponent({
     },
     generateLine(record) {
       return this.lineGen(this.getRecordXY(record, this.fields))
+    },
+    drawLineToCanvas(record) {
+      const ctx = this.lineGen.context()
+
+      if (ctx) {
+        ctx.strokeStyle = 'rgba(255,255,255,.015)'
+        ctx.beginPath()
+        this.generateLine(record)
+        ctx.stroke()
+      }
+    },
+    drawAll(records, chunkSize = 100) {
+      const ctx = this.lineGen.context()
+
+      if (ctx) {
+        this.clearCanvas()
+        const localRecords = Array.from(records)
+
+        return new Promise((resolve) => {
+          const onDraw = () => {
+            const chunk = localRecords.splice(0, chunkSize)
+
+            if (chunk.length) {
+              requestAnimationFrame(() => {
+                ctx.strokeStyle = 'rgba(255,255,255,.015)'
+                ctx.beginPath()
+                chunk.forEach(record => {
+                  ctx.strokeStyle = chroma.random().alpha(0.05).css()
+                  ctx.beginPath()
+                  this.generateLine(record)
+                  // ctx.closePath()
+                })
+                ctx.stroke()
+                onDraw()
+              })
+            } else {
+              resolve()
+            }
+          }
+
+          onDraw()
+        })
+      }
     }
   }
 })

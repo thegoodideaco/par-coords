@@ -1,14 +1,11 @@
-// @ts-check
-
 import Vue from 'vue'
 import '../../src/config'
 import {  INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
-import { DocsContainer, DocsPage } from '@storybook/addon-docs'
+import { DocsContainer, DocsPage } from '@storybook/addon-docs/blocks'
 import './variables.css'
 import './styles.scss'
 // import  './trello'
 import { themes } from '@storybook/theming'
-import toReact from '@egoist/vue-to-react'
 
 Vue.prototype.toJSON = function () {
   return this
@@ -17,17 +14,13 @@ Vue.prototype.toJSON = function () {
 /** @type {import('@storybook/addons').Parameters} */
 export const parameters = {
 
-  docs: {
-    prepareForInline: (storyFn, { args }) => {
-      const Story = toReact(storyFn())
-      return <Story {...args} />
-    },
-    inlineStories: false,
-    container:     DocsContainer,
-    page:          DocsPage,
-    theme:         themes.dark,
-    iframeHeight:  500
-  },
+  // docs: {
+  container: DocsContainer,
+  page:      DocsPage,
+  //   theme:        themes.dark,
+  //   iframeHeight: 500
+
+  // },
   toolbar: {
     icon:  'circlehollow',
     // array of plain string values or MenuItem shape (see below)

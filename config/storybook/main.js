@@ -8,27 +8,27 @@ module.exports = {
     },
     '@storybook/addon-links',
     '@storybook/addon-a11y',
-    // {
-    //   name:    '@storybook/addon-docs',
-    //   options: {
-    //     configureJSX: false
-    //   }
-    // },
     {
       name:    '@storybook/addon-docs',
       options: {
-        babelOptions: {
-          presets: [
-            [
-              '@vue/cli-plugin-babel/preset',
-              {
-                jsx: false
-              }
-            ]
-          ]
-        }
-
+        configureJSX: false
       }
     }
+    // {
+    //   name:    '@storybook/addon-docs',
+    //   options: {
+    //     babelOptions: {
+    //       presets: [
+    //         [
+    //           '@vue/cli-plugin-babel/preset',
+    //           {
+    //             jsx: false
+    //           }
+    //         ]
+    //       ]
+    //     }
+
+    //   }
+    // }
   ]
 }

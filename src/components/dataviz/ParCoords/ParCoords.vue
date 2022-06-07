@@ -25,7 +25,7 @@
         <dimension-column
           ref="columns"
           v-model="filters[i]"
-          class="par-column"
+          class="par-column opacity-40"
           :min="yScales[i].domain()[0]"
           :max="yScales[i].domain()[1]"
           :accessor="d"
@@ -55,6 +55,7 @@
     <!-- Line renderer here -->
     <par-coord-line-renderer
       class="absolute top-0 left-0 w-full h-full pointer-events-none"
+      :use-canvas="useCanvas"
       :records="topList"
       :fields="fields"
       :x-scale="xScale"
@@ -74,6 +75,7 @@
 <script>
 import { useCrossfilterOld } from '@/composition/dataviz'
 import { useGroupAll, useTopList } from '@/composition/useCrossfilter'
+import crossfilter from 'crossfilter2'
 import { scalePoint } from 'd3-scale'
 import { computed, defineComponent, inject, ref, watch } from 'vue-demi'
 import DimensionColumn from './DimensionColumn.vue'
@@ -127,7 +129,11 @@ export default defineComponent({
       Function,
       String,
       Number
-    ]
+    ],
+    useCanvas: {
+      type:    Boolean,
+      default: false
+    }
   },
 
   setup(props) {
@@ -142,6 +148,8 @@ export default defineComponent({
       props.height
     ])
 
+    const i_cf = inject('cf', crossfilter())
+
     const {
       cf,
       dimensions,
@@ -149,7 +157,7 @@ export default defineComponent({
       extents
     } = inject(
       'useCrossfilter',
-      useCrossfilterOld(ds, props.fields, heightRef)
+      useCrossfilterOld(i_cf, ds, props.fields, heightRef)
     )
 
     const { totalFiltered } = useGroupAll(cf)

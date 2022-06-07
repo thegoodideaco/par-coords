@@ -1,4 +1,4 @@
-import { computed, readonly, ref, shallowRef } from 'vue-demi'
+import { computed, readonly, ref, shallowRef, triggerRef } from 'vue-demi'
 import crossfilter from 'crossfilter2'
 import { scalePow } from 'd3'
 import { tryOnScopeDispose } from '@vueuse/core'
@@ -15,9 +15,14 @@ import { tryOnScopeDispose } from '@vueuse/core'
  * @param {Array<T = any>} dataset
  * @param {accessorObj[]} dimensions
  */
-export function useCrossfilterOld(dataset, dimensions) {
+export function useCrossfilterOld(cfInstance, dataset, dimensions) {
   /** @type {import('crossfilter2').Crossfilter<typeof dataset[0]>} */
-  const cfRaw = crossfilter(dataset)
+  const cfRaw = cfInstance || crossfilter()
+
+  if (!cfRaw.size() && dataset) {
+    cfRaw.add(dataset)
+  }
+
   const cf = readonly(cfRaw)
 
   const createDimension = (strOrFn) => {
@@ -25,10 +30,10 @@ export function useCrossfilterOld(dataset, dimensions) {
      * Force string fields to be numerical
      */
     if (typeof strOrFn === 'string') {
-      return cf.dimension((r) => isFinite(+r[strOrFn]) ? +r[strOrFn] : 0)
+      return cf.dimension((r) => !!r && isFinite(+r[strOrFn]) ? +r[strOrFn] : 0)
     } else {
       if (typeof strOrFn.field === 'string') {
-        return cf.dimension((r) => +r[strOrFn.field] || 0)
+        return cf.dimension((r) => !!r && (isFinite(+r[strOrFn.field]) || 0))
       } else {
         return cf.dimension((r) => +strOrFn.field(r) || 0)
       }
@@ -53,6 +58,7 @@ export function useCrossfilterOld(dataset, dimensions) {
    * @type {import('vue-demi').ComputedRef<d3.ScaleLinear<[number, number], [number, number]>[]>}
    */
   const scales = computed(() => Array.from(extents.value, (e) => {
+    console.log('updating scales')
     return scalePow()
       .exponent(1)
       .domain(e).nice()
@@ -63,6 +69,9 @@ export function useCrossfilterOld(dataset, dimensions) {
   const filterWatch = cf.onChange(t => {
     if (t === 'filtered') {
       totalFiltered.value = mainGroup.value()
+    } else if (t === 'dataAdded' || t === 'dataRemoved') {
+      dimensionObjects.value.forEach(d => d.filterAll())
+      triggerRef(dimensionObjects)
     }
   })
 

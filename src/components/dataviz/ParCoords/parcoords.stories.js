@@ -21,6 +21,8 @@ import records from "@/components/demo/records.json";
 
 const colorOptions = Object.keys(chroma.brewer);
 
+import LineRenderer from './ParCoordLineRenderer.vue'
+
 const columnFields = [
   "acousticness",
   "danceability",
@@ -36,6 +38,9 @@ const columnFields = [
 const meta = {
   title: "components/Par Coords",
   component: ParCoords,
+  subcomponents: {
+    LineRenderer
+  },
   parameters: {
     layout: "fullscreen",
   },

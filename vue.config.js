@@ -17,11 +17,6 @@ const path = require('path')
 module.exports = {
   runtimeCompiler: true,
 
-  /**
-   * Leave empty for relative loading
-   */
-  publicPath: isDevelopment ? '/' : '',
-
   lintOnSave: true,
 
   /**
@@ -56,6 +51,10 @@ module.exports = {
     //     ]
     //   })
     // )
+
+    config.resolve.fallback = {
+      stream: require.resolve('stream-browserify')
+    }
 
     if (isProduction || process.env.REPORT_UNUSED === 'true') {
       const devExcludes = [
@@ -107,7 +106,7 @@ module.exports = {
         // },
 
         // host:       'localhost',
-        useLocalIp: true
+        // useLocalIp: true
 
       }
     }
@@ -171,6 +170,7 @@ module.exports = {
       .use('babel-loader')
       .loader('babel-loader')
       .end()
+      .type('javascript/auto')
 
     /**
      * * Markdown File Configuration
@@ -181,6 +181,7 @@ module.exports = {
       .use('raw-loader')
       .loader('raw-loader')
       .end()
+      .type('javascript/auto')
 
     /**
      * Import fragment shaders
@@ -190,6 +191,8 @@ module.exports = {
       .test(/\.(frag|vert|glsl)(\?.*)?$/)
       .use('raw-loader')
       .loader('raw-loader')
+      .end()
+      .type('javascript/auto')
   },
 
   transpileDependencies: process.env.NODE_ENV === 'development'

@@ -39,12 +39,13 @@
 
 <script>
 // import { nice } from 'd3-array'
+import { defineComponent } from 'vue-demi'
 import TickMarks from './TickMarks.vue'
 import YBrush from './YBrush.vue'
 /**
  * An individual column for displaying ticks and brushing a dimension
  */
-export default {
+export default defineComponent({
   components: {
     TickMarks,
     YBrush
@@ -84,6 +85,10 @@ export default {
       ],
       default: ',.3~s'
     },
+    maxTicks: {
+      type:    Number,
+      default: undefined
+    },
 
     scale: {
       type: Function
@@ -105,7 +110,7 @@ export default {
       // return nice(this.min, this.max, this.ticks).reverse()
     }
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

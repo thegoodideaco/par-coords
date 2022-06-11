@@ -4,8 +4,11 @@ import { csv } from 'd3'
 import Papa from 'papaparse/papaparse'
 import { computed, effectScope, proxyRefs, ref, shallowRef, unref, watchEffect } from 'vue-demi'
 
-export function useCSV(paths = CSV_PATHS) {
-  const _index = ref(0)
+export function useCSV({
+  paths = CSV_PATHS,
+  startIndex = 0
+} = {}) {
+  const _index = ref(startIndex)
   const index = computed({
     get() {
       return _index.value

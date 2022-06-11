@@ -57,7 +57,10 @@ if (process.env.NODE_ENV === 'development') {
       chroma:             require('chroma-js'),
       Papa:               require('papaparse'),
       usePapaParseLoader: require('@/composition/useCsv').usePapaParseLoader,
-      kmeans:             require('ml-kmeans')
+      useCrossfilter:     require('@/composition/useCrossfilter'),
+      /** @type {import('ml-kmeans')} */
+      kmeans:             require('ml-kmeans').default,
+      saveFile:           require('@/utils/saveFile').downloadToFile
     }
   })
 }

@@ -2,54 +2,55 @@
   <div
     class="par-coords shadow-2xl"
     :style="styleVars">
+    <!-- Brushes -->
     <div class="brushes absolute z-10">
-      <div
-        v-for="(d, i) in fields"
-        :key="d"
-        class="brushes__brush-container absolute top-0 left-0"
-        :style="{ left: `${xScale(d)}px` }">
-        <!-- Header -->
+      <template v-for="(d, i) in fields">
         <div
-          class="text-center"
-          style="
-            transform: translateX(-50%) translateY(-100%);
-            margin-top: -10px;
-          ">
-          <slot
-            name="header"
-            v-bind="{ field: d, index: i }">
-            <!-- {{ d }} -->
-          </slot>
-        </div>
-
-        <dimension-column
-          ref="columns"
-          v-model="filters[i]"
-          class="par-column opacity-40"
-          :min="yScales[i].domain()[0]"
-          :max="yScales[i].domain()[1]"
-          :accessor="d"
-          :height="height"
-          :width="50"
-          @input="filterDimensions(i, $event)">
-          <template
-            v-if="$scopedSlots.tick"
-            #tick="tickProps">
+          :key="i"
+          class="brushes__brush-container absolute top-0 left-0"
+          :style="{ left: `${xScale(d)}px` }">
+          <!-- Header -->
+          <div
+            class="text-center"
+            style="
+              transform: translateX(-50%) translateY(-100%);
+              margin-top: -10px;
+            ">
             <slot
-              name="tick"
-              v-bind="tickProps" />
-          </template>
-        </dimension-column>
-
-        <!-- Footer -->
-        <div class="par-footer">
-          <slot
-            name="footer"
-            v-bind="{ field: d, index: i, value: filters[i] }">
-            <!-- {{ d }} -->
-          </slot>
+              name="header"
+              v-bind="{ field: d, index: i }">
+              <!-- {{ d }} -->
+            </slot>
+          </div>
+          <dimension-column
+            :key="d"
+            ref="columns"
+            v-model="filters[i]"
+            class="par-column opacity-40"
+            :min="yScales[i].domain()[0]"
+            :max="yScales[i].domain()[1]"
+            :accessor="fields[i]"
+            :height="height"
+            :width="50"
+            @input="filterDimensions(i, $event)">
+            <template
+              v-if="$scopedSlots.tick"
+              #tick="tickProps">
+              <slot
+                name="tick"
+                v-bind="tickProps" />
+            </template>
+          </dimension-column>
+          <!-- Footer -->
+          <div class="par-footer">
+            <slot
+              name="footer"
+              v-bind="{ field: d, index: i, value: filters[i] }">
+              <!-- {{ d }} -->
+            </slot>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
 
     <!-- Line renderer here -->

@@ -105,7 +105,7 @@ module.exports = {
 
         // },
 
-        // host:       'localhost',
+        host: 'localhost'
         // useLocalIp: true
 
       }

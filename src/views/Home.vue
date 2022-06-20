@@ -12,7 +12,7 @@
 import HelloWorld from '@/components/VueUseTest.vue'
 
 export default {
-  name:       'Home',
+  name:       'HomeComponent',
   components: {
     HelloWorld
   }

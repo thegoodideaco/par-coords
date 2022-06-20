@@ -86,11 +86,12 @@ export default defineComponent({
       default: (k) => String(Array.isArray(k) ? k[0] : k)
     }
   },
-  setup({
-    keys, valueAccessor
-  }, {
+  setup(props, {
     emit
   }) {
+    const {
+      keys, valueAccessor
+    } = proxyRefs(props)
     const sortedKeys = ref([])
     const localKeys = ref()
 

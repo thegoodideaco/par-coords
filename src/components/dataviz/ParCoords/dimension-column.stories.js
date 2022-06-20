@@ -12,16 +12,56 @@ const r = records[0];
  */
 export default {
   title: "components/DimensionColumn",
-  component: DimensionColumn
+  component: DimensionColumn,
+  parameters: {
+    layout: 'centered'
+  },
+  subcomponents: {
+    TickMarks
+  },
+  argTypes: {
+    width: {
+      control: 'range',
+      min: 10,
+      max: 100
+    },
+    height: {
+      control: {
+        type: 'range',
+        min: 100,
+        max: 800
+      }
+    }
+  },
+  args: {
+    width: 50,
+    height: 100,
+    min: -100,
+    max: 100
+  }
 };
 
 /** @type {import('@storybook/vue').Story} */
-const Template = (args, {argTypes}) => ({
+const Template = (args, {argTypes}) => defineComponent({
   props: Object.keys(argTypes),
+  setup() {
+    return {
+      data: null
+    }
+  },
+  model: {
+    event: 'input',
+    prop: 'value'
+  },
+
   components: {
     DimensionColumn,
   },
-  template: ` <dimension-column v-bind="$props" />
+  template: `
+  <div>
+  <dimension-column v-bind="$props" v-on="$listeners" v-model="data" />
+  <p class="fixed top-10 left-10">{{data}}</p>
+  </div>
   `,
 });
 

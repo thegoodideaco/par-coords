@@ -29,9 +29,11 @@
             class="par-column opacity-40"
             :min="yScales[i].domain()[0]"
             :max="yScales[i].domain()[1]"
+            :max-ticks="$attrs.maxTicks"
             :accessor="fields[i]"
             :height="height"
             :width="50"
+            :scale="yScales[i]"
             @input="filterDimensions(i, $event)">
             <template
               v-if="$scopedSlots.tick"
@@ -83,6 +85,7 @@ import DimensionColumn from './DimensionColumn.vue'
 import ParCoordLineRenderer from './ParCoordLineRenderer.vue'
 
 export default defineComponent({
+  name:       'ParCoords',
   components: {
     DimensionColumn,
     ParCoordLineRenderer
@@ -117,10 +120,13 @@ export default defineComponent({
       type:    Number,
       default: 0
     },
-    color: [
-      Function,
-      String
-    ],
+    color: {
+      type: [
+        Function,
+        String
+      ],
+      default: '#000000'
+    },
     thickness: [
       Function,
       String,

@@ -22,7 +22,14 @@
                 <!-- Upload button -->
                 <data-loader
                   v-model="test"
-                  class="px-3 py-2 rounded bg-blue-400 cursor-pointer text-white"
+                  class="
+                    px-3
+                    py-2
+                    rounded
+                    bg-blue-400
+                    cursor-pointer
+                    text-white
+                  "
                   @before:load="loading = true"
                   @input="loading = false">
                   Select
@@ -91,7 +98,8 @@
             <p class="text-xs text-green-400">
               {{
                 dataLength === dataset.length ? 0 : dataLength | asNumber
-              }} filtered
+              }}
+              filtered
             </p>
           </div>
 
@@ -161,7 +169,13 @@ import chroma from 'chroma-js'
 import { extent } from 'd3-array'
 import { scaleQuantize, scaleSequentialPow } from 'd3-scale'
 import { interpolateRainbow } from 'd3-scale-chromatic'
-import { computed, defineComponent, ref, shallowRef, watchPostEffect } from 'vue-demi'
+import {
+  computed,
+  defineComponent,
+  ref,
+  shallowRef,
+  watchPostEffect
+} from 'vue-demi'
 export default defineComponent({
   name:       'ParCoordsView',
   components: {
@@ -203,9 +217,12 @@ export default defineComponent({
           const [
             min,
             max
-          ] = extent(nav.dataset, (r) => isNumerical ? +r[k] ?? 0 : r[k])
+          ] = extent(nav.dataset, (r) =>
+            isNumerical ? +r[k] ?? 0 : r[k]
+          )
 
-          const validDimension = isNumerical && isFinite(+min) && isFinite(+max) && min !== max
+          const validDimension =
+            isNumerical && isFinite(+min) && isFinite(+max) && min !== max
 
           return validDimension
             ? [
@@ -226,6 +243,10 @@ export default defineComponent({
           Array.from(keys.value, (key, i) => {
             const isNumerical = !isNaN(+nav.dataset[0][key])
 
+            /** @type {[string, {
+                          domain: string[];
+                          numerical: boolean;
+                      }]} */
             const value = [
               key,
               {
@@ -270,7 +291,10 @@ export default defineComponent({
 
             return prev
           }, [])
-          .filter((val) => new Set(Float64Array.from(dataset.value, (r) => r[val])).size > 2)
+          .filter(
+            (val) =>
+              new Set(Float64Array.from(dataset.value, (r) => r[val])).size > 2
+          )
       }
     })
 
@@ -302,10 +326,12 @@ export default defineComponent({
         .range(chroma.scale(chroma.brewer.GnBu).colors(10, 'hex'))
     },
     lineStyleSettings() {
-      const s = scaleSequentialPow().interpolator(interpolateRainbow).domain([
-        0,
-        1
-      ])
+      const s = scaleSequentialPow()
+        .interpolator(interpolateRainbow)
+        .domain([
+          0,
+          1
+        ])
       return {
         color:     (r, i, arr) => s(i / arr.length),
         opacity:   this.opacityGen,
@@ -334,7 +360,6 @@ export default defineComponent({
   column-gap: 1rem;
 
   &__wrap {
-
     grid-area: chart;
     // background-color: red;
     padding: 4rem;

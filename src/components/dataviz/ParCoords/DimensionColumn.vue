@@ -51,15 +51,10 @@ export default defineComponent({
     YBrush
   },
   props: {
+
+    /** @type {Vue.PropOptions<[number, number]>} */
     value: {
       type: Array
-    },
-    accessor: {
-      type: [
-        String,
-        Function
-      ],
-      required: true
     },
     min: {
       type:    Number,
@@ -87,7 +82,7 @@ export default defineComponent({
     },
     maxTicks: {
       type:    Number,
-      default: undefined
+      default: 10
     },
 
     scale: {
@@ -98,7 +93,7 @@ export default defineComponent({
 
     /** @type {() => number} */
     ticks() {
-      return ~~this.height / 50
+      return Math.min(~~this.height / 50, this.maxTicks)
     },
 
     /** @type {() => [number, number]} */

@@ -2,18 +2,13 @@ import { curveMethods } from "@/utils/curveMethods";
 import {
   breakpointsTailwind,
   useBreakpoints,
-  useElementBounding,
-  useElementSize,
-  useResizeObserver,
 } from "@vueuse/core";
 import chroma from "chroma-js";
-import { format, formatDefaultLocale, scaleLinear, scaleQuantile } from "d3";
-import { omit, omitBy } from "lodash";
+import { format, scaleQuantile } from "d3";
 import {
   computed,
   defineComponent,
   ref,
-  shallowReadonly,
   shallowRef,
 } from "vue-demi";
 import ParCoords from "./ParCoords.vue";
@@ -48,16 +43,21 @@ const meta = {
     /** @type {[keyof typeof records[0]]} */
     fields: columnFields,
     dataset: () => records,
-    colorizeOn: columnFields[0],
-    color: colorOptions[0],
+    colorizeOn: 'OrRd',
+
+     /** @type {keyof typeof chroma.brewer} */
+    brewerKey: 'BuPu',
     curve: "curveBumpX",
     width: 900,
-    height: 500
+    height: 500,
+    maxTicks: 4
   },
   argTypes: {
-    color: {
+    brewerKey: {
+      name: 'Color Theme',
       control: {
         type: "select",
+        // defaultValue: 'OrRd'
       },
       options: colorOptions,
     },
@@ -80,6 +80,7 @@ const meta = {
     colorizeOn: {
       control: {
         type: "select",
+        defaultValue: columnFields[0]
       },
       options: columnFields,
     },
@@ -91,6 +92,9 @@ const meta = {
         (k) => !k.endsWith("Closed") && !k.endsWith("Open")
       ),
     },
+    dataset: {
+      control: false
+    }
   },
 };
 
@@ -117,7 +121,7 @@ export const defaultView = (args, { argTypes }) =>
       /**
        * Selected array of colors
        */
-      const brewerColors = computed(() => chroma.brewer[props.color]);
+      const brewerColors = computed(() => chroma.brewer[props.brewerKey]);
 
       /**
        * Quantile scale for choosing color
@@ -127,7 +131,7 @@ export const defaultView = (args, { argTypes }) =>
           _records.value,
           (r) => r[props.colorizeOn]
         );
-        const range = brewerColors.value;
+        const range = brewerColors.value || ['#000000'];
 
         const baseScale = scaleQuantile().domain(domain).range(range);
 
@@ -141,6 +145,8 @@ export const defaultView = (args, { argTypes }) =>
         colorGen,
         brewerColors,
         fixedCurve: curve,
+        args,
+        argTypes
       };
     },
     methods: {
@@ -154,7 +160,7 @@ export const defaultView = (args, { argTypes }) =>
     <par-coords
       ref="par"
       v-bind="$props"
-      :color="colorGen"
+      :color="$data.colorGen"
       :width="width"
       :height="height"
       :curve="fixedCurve"

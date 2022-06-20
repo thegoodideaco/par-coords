@@ -32,7 +32,7 @@ export default defineComponent({
       }
     },
 
-    /** @type {() => Vue.PropOptions<[number, number] | null>} */
+    /** @type {Vue.PropOptions<[number, number] | null>} */
     value: {
       type: Array
     },
@@ -60,7 +60,8 @@ export default defineComponent({
     scale: {
       type:    Function,
       default: scaleLinear()
-    }
+    },
+    round: Boolean
   },
 
   data: () => ({
@@ -77,15 +78,17 @@ export default defineComponent({
   computed: {
     /** @type {() => d3.ScaleLinear} */
     localScale() {
-      return (
-        ( this.scale ? this.scale.copy() : scaleLinear())
-          .domain(this.domain)
-          .range([
-            this.y,
-            this.height
-          ])
-          .clamp(true)
-      )
+      const rangeType = this.round ? 'rangeRound' : 'range'
+      const _scale = (this.scale ? this.scale.copy() : scaleLinear())
+        .domain(this.domain)
+        .clamp(true)
+
+      _scale[rangeType]([
+        this.y,
+        this.height
+      ])
+
+      return _scale
     },
 
     /** @type {() => d3.BrushBehavior} */
@@ -231,7 +234,7 @@ export default defineComponent({
         if (this.brushing) {
           this.$emit('input', [
             this.localScale.invert(selection[0]),
-            this.localScale.invert(selection[1] + 0.1)
+            this.localScale.invert(selection[1])
           ])
         } else {
           console.log('redraw')

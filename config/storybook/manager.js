@@ -53,10 +53,4 @@ addons.setConfig({
   // }),
 
   theme: darcula
-
-  /**
-   * id to select an addon panel
-   * @type {String}
-   */
-  // selectedPanel: 'Controls',
 })

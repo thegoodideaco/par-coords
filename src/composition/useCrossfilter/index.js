@@ -2,44 +2,55 @@ import { toRefs, tryOnScopeDispose } from '@vueuse/core'
 import crossfilter from 'crossfilter2'
 import {
   computed,
-  effectScope,
-  getCurrentScope,
   markRaw,
-  onScopeDispose,
   proxyRefs,
   reactive,
   ref,
   shallowRef,
+  unref,
   watch
 } from 'vue-demi'
 
 /**
  * Create a crossfilter instance,
  * and provide reactive values
- * @param {Array<?>} dataset
+ * @param {import('@vueuse/core').MaybeRef<?[]>} dataset
  */
 export default function (dataset) {
-  const cf = crossfilter(dataset)
+  const ds = unref(dataset)
+  const cf = crossfilter()
+
+  markRaw(ds)
+  markRaw(cf)
+
   const indexDimension = cf.dimension((_, i) => i)
+
+  const total = ref(0)
 
   const { totalFiltered } = useGroupAll(cf)
 
   const topRecords = shallowRef(indexDimension.bottom(10))
 
-  const watcher = cf.onChange((type) => {
+  const { onChange } = useChangeEvents(cf)
+
+  onChange((type) => {
+    topRecords.value = indexDimension.bottom(10)
     if (type === 'filtered') {
-      topRecords.value = indexDimension.bottom(10)
+    } else {
+      total.value = cf.size()
     }
   })
 
-  tryOnScopeDispose(() => {
-    watcher()
-  })
+  const actions = {
+    ...cf
+  }
 
   return {
     cf,
+    total,
     totalFiltered,
-    topRecords
+    topRecords,
+    actions
   }
 }
 
@@ -50,14 +61,26 @@ export default function (dataset) {
  * @param {Boolean} isArray
  */
 export function useDimension(cfInstance, accessor, isArray) {
-  const dimension = cfInstance.dimension(accessor, isArray)
+  const dimension =  markRaw(cfInstance.dimension(accessor, isArray))
   const { onChange } = useChangeEvents(cfInstance)
 
-  markRaw(dimension)
-
   function getExtent(_dimensionInstance = dimension) {
-    const top = _dimensionInstance.accessor(_dimensionInstance.top(1)[0])
-    const bottom = _dimensionInstance.accessor(_dimensionInstance.bottom(1)[0])
+    const [
+      topRecord,
+      bottomRecord
+    ] = [
+      _dimensionInstance.top(1)[0],
+      _dimensionInstance.bottom(1)[0]
+    ]
+    if (cfInstance.size() === 0 || !topRecord) {
+      // debugger
+      return [
+        null,
+        null
+      ]
+    }
+    const top = _dimensionInstance.accessor(topRecord)
+    const bottom = _dimensionInstance.accessor(bottomRecord)
 
     return [
       top,
@@ -69,10 +92,12 @@ export function useDimension(cfInstance, accessor, isArray) {
 
   const filteredExtent = shallowRef(getExtent())
   onChange((type) => {
-    filteredExtent.value = getExtent()
+    console.log('type', type)
+    filteredExtent.value = getExtent(dimension)
 
     if (type !== 'filtered') {
-      // extent.value =
+      // dimension.filterAll()
+      extent.value = getExtent()
     }
   })
 
@@ -95,7 +120,7 @@ export function useDimension(cfInstance, accessor, isArray) {
     dimension,
     filter,
     extent,
-    filteredExtent: computed(() => filteredExtent.value)
+    filteredExtent
   })
 }
 
@@ -146,12 +171,12 @@ export function useGroup(cfInstance, dimensionInstance, valueOf) {
 }
 
 /**
- * Creates a reactive groupAll
+ * Creates a reactive groupAll on either crossfilter itself or a dimension
  * @param {import('crossfilter2').Crossfilter<T>} cfInstance
  * @param {((record: T) => number)} summarizer
  */
-export function useGroupAll(cfInstance, summarizer) {
-  const groupRef = shallowRef(cfInstance.groupAll())
+export function useGroupAll(cfInstance, summarizer, createOn = cfInstance) {
+  const groupRef = shallowRef(createOn.groupAll())
 
   if (summarizer) {
     groupRef.value.reduceSum(summarizer)
@@ -219,46 +244,53 @@ export function useTopList(
  * @param {import('crossfilter2').Crossfilter} cfInstance
  */
 export function useChangeEvents(cfInstance) {
-  const mainScope = getCurrentScope()
-  let effects = effectScope()
+  // const mainScope = getCurrentScope()
+  // let effects = markRaw(effectScope())
 
-  if (mainScope) {
-    onScopeDispose(() => {
-      effects.stop()
+  // if (mainScope) {
+  //   onScopeDispose(() => {
+  //     effects.stop()
+  //   })
+  // }
+
+  /**
+   *
+   * @param {typeof cfInstance.onChange} cb
+   */
+  function onChange(cb) {
+    const watcher = cfInstance.onChange(cb)
+
+    console.log('onChange created')
+    tryOnScopeDispose(() => {
+      console.log('onChange dispose')
+      watcher()
     })
+
+    return watcher
   }
 
   /**
-   * @typedef {({cf: import('crossfilter2').Crossfilter, type: ('filtered' | 'dataAdded' | 'dataRemoved')})} cbParams
-   * @typedef {(params: cbParams) => void} cbFn
+   *
+   * @param {() => ReturnType<typeof cfInstance.onChange>} cb
    */
-
-  /**
-   * @type {cbFn}
-   */
-  const onChange = (_cb) => {
-    effects.run(() => {
-      const cb = cfInstance.onChange((type) => {
-        // if(type === 'dataAdded') {
-        _cb({
-          cf: cfInstance,
-          type
-        })
-        // }
-      })
-
-      onScopeDispose(() => {
-        cb()
-      })
+  function onFiltered(cb) {
+    const watcher = cfInstance.onChange((type) => {
+      if (type === 'filtered') {
+        cb.call(this, ...arguments)
+      }
     })
+
+    console.log('onFiltered created')
+    tryOnScopeDispose(() => {
+      console.log('onFiltered dispose')
+      watcher()
+    })
+
+    return watcher
   }
 
   return {
     onChange,
-    _effect: effects,
-    stopAll() {
-      effects.stop()
-      effects = effectScope()
-    }
+    onFiltered
   }
 }

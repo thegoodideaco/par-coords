@@ -4,7 +4,6 @@ import {  INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import './variables.css'
 import './styles.scss'
 // import  './trello'
-import { themes } from '@storybook/theming'
 
 Vue.prototype.toJSON = function () {
   return this
@@ -16,8 +15,7 @@ export const parameters = {
     matchers: {
       color: /(background|color)$/i,
       date:  /Date$/
-    },
-    expanded: true
+    }
   },
   docsOnly: false,
   viewport: {
@@ -29,17 +27,17 @@ export const parameters = {
 // export const viewMode = 'story'
 
 export const globalTypes = {
-  theme: {
-    name:         'Theme',
-    description:  'Global theme for components',
-    defaultValue: 'light',
-    toolbar:      {
-      icon:  'circlehollow',
-      // array of plain string values or MenuItem shape (see below)
-      items: [
-        'light',
-        'dark'
-      ]
-    }
-  }
+  // theme: {
+  //   name:         'Theme',
+  //   description:  'Global theme for components',
+  //   defaultValue: 'light',
+  //   toolbar:      {
+  //     icon:  'circlehollow',
+  //     // array of plain string values or MenuItem shape (see below)
+  //     items: [
+  //       'light',
+  //       'dark'
+  //     ]
+  //   }
+  // }
 }

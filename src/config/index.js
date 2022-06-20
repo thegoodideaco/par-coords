@@ -14,6 +14,7 @@ Vue.prototype.toJSON = function () {
 }
 
 Vue.use(VueCompositionApi)
+Vue.use(demi)
 
 Vue.filter('asNumber', (val, _format = ',.0f') => format(_format)(val || 0) )
 
@@ -58,6 +59,7 @@ if (process.env.NODE_ENV === 'development') {
       Papa:               require('papaparse'),
       usePapaParseLoader: require('@/composition/useCsv').usePapaParseLoader,
       useCrossfilter:     require('@/composition/useCrossfilter'),
+      useD3:              require('@/composition/useD3'),
       /** @type {import('ml-kmeans')} */
       kmeans:             require('ml-kmeans').default,
       saveFile:           require('@/utils/saveFile').downloadToFile

@@ -5,6 +5,9 @@
         "target": "es2016",
         "jsx": "preserve",
         "moduleResolution": "node",
+        "noImplicitAny": false,
+        "noImplicitThis": false,
+        "allowSyntheticDefaultImports": true,
         "resolveJsonModule": true,
         "baseUrl": ".",
         "paths": {

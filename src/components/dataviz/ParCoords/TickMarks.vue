@@ -65,14 +65,16 @@ export default {
     },
     ticks: {
       /**
-       * @type {Vue.PropType<number | number[]>}
+       * @type {() => Vue.PropType<number | number[]>}
        */
       type: [
         Number,
         Array
       ],
 
-      default: () => 10
+      default() {
+        return 10
+      }
     },
 
     lineLength: {
@@ -264,6 +266,7 @@ export default {
     tickTransform(tick) {
       const prop = this.direction === 'vertical' ? 'translateY' : 'translateX'
       return {
+        // eslint-disable-next-line vue/no-use-computed-property-like-method
         transform: `${prop}(${this.localScale(tick)}px)`
       }
     }

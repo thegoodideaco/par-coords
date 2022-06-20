@@ -9,7 +9,7 @@
     "dev": "yarn serve --open",
     "sb": "yarn storybook:serve",
     "storybook:build": "vue-cli-service storybook:build -c config/storybook",
-    "storybook:serve": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
+    "storybook:serve": "vue-cli-service storybook:serve -s public  -p 6006 -c config/storybook",
     "styleguide": "vue-cli-service styleguidist",
     "styleguide:build": "vue-cli-service styleguidist:build"
   },
@@ -23,10 +23,12 @@
     "core-js": "^3.22.8",
     "crossfilter2": "^1.5.4",
     "d3": "^7.4.4",
+    "libphonenumber-js": "^1.10.6",
     "lodash": "^4.17.21",
     "ml-kmeans": "^5.0.0",
     "normalize.css": "^8.0.1",
     "papaparse": "^5.3.2",
+    "reductio": "^1.0.0",
     "tippy.js": "^6.3.7",
     "tweakpane": "^3.0.8",
     "vue": "^2.6.14",
@@ -35,6 +37,7 @@
     "vuedraggable": "^2.24.3"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.18.2",
     "@storybook/addon-a11y": "~6.4",
     "@storybook/addon-docs": "~6.4",
     "@storybook/addon-essentials": "~6.4",
@@ -49,15 +52,15 @@
     "@vue/cli-plugin-babel": "~5.0.4",
     "@vue/cli-plugin-eslint": "~5.0.4",
     "@vue/cli-service": "~5.0.4",
-    "@vue/eslint-config-standard": "^5.1.2",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^7",
+    "@vue/eslint-config-standard": "^7.0.0",
+    "eslint": "^8.17.0",
     "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-storybook": "^0.5.12",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-vue": "^9.1.0",
     "raw-loader": "^4.0.2",
     "sass": "^1.51.0",
     "sass-loader": "^8.0.2",
@@ -67,5 +70,8 @@
     "vue-docgen-loader": "^1.5.1",
     "vue-template-compiler": "^2.6.14",
     "webpack": "5"
+  },
+  "peerDependencies": {
+    "eslint-plugin-n": "15"
   }
 }

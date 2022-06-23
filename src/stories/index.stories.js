@@ -1,9 +1,10 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import { asyncDelay, asyncUntil } from '@/composition/useAsyncUntil'
 import useIntlPhoneNumber from '@/composition/useIntlPhoneNumber'
 import { action } from '@storybook/addon-actions'
 import { linkTo } from '@storybook/addon-links'
 import { AsYouType } from 'libphonenumber-js'
-import { omit } from 'lodash'
+import { omit, random } from 'lodash'
 import { defineComponent, ref } from 'vue-demi'
 
 import MyButton from '../components/MyButton.vue'
@@ -86,3 +87,35 @@ export const withSomePhoneNumberComposed = () => defineComponent({
     }
   }
 })
+
+
+
+/** @type {import('@storybook/vue').Story} */
+export const usingAsyncUntil = () => defineComponent({
+  setup() {
+    const asyncFn = async () => {
+      await asyncDelay(random(500, 2500, false))
+
+      return random(1,10, false)
+    }
+    const ua = async () => {
+      const num = await asyncUntil(() => random(1, 10, false), n => n < 5, 10)
+
+      console.log(num)
+    }
+
+    return {
+      ua
+    }
+  },
+  template: `
+  <div>
+  <button @click="ua()">Click me</button>
+  </div>
+  `
+})
+
+usingAsyncUntil.parameters = {
+  ...usingAsyncUntil.parameters,
+  layout: 'centered'
+}

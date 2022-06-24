@@ -8,8 +8,8 @@ export function asyncDelay(ms = 1000) {
 
 /**
  *
- * @param {() => Promise<any>} getFn function to return a promise of inf
- * @param {(data: any) => boolean} conditionFn conditional check based on result data
+ * @param {() => Promise<T>} getFn function to return a promise of inf
+ * @param {(data: typeof T) => boolean} conditionFn conditional check based on result data
  * @param {number} waitMS Number in milliseconds to wait until calling again if condition is false
  * @returns
  */

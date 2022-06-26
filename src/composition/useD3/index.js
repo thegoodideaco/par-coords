@@ -1,6 +1,5 @@
-import { noop, tryOnScopeDispose, useRafFn } from '@vueuse/core'
+import { noop, tryOnScopeDispose } from '@vueuse/core'
 import { scaleLinear } from 'd3'
-import { initial } from 'lodash'
 import { computed, ref, shallowRef, triggerRef, unref, watch, watchEffect } from 'vue-demi'
 
 export function useScale(baseScale = scaleLinear()) {

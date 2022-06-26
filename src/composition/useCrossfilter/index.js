@@ -35,8 +35,7 @@ export default function (dataset) {
 
   onChange((type) => {
     topRecords.value = indexDimension.bottom(10)
-    if (type === 'filtered') {
-    } else {
+    if (type !== 'filtered') {
       total.value = cf.size()
     }
   })

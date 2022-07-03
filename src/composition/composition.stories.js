@@ -4,11 +4,11 @@ import {
   onMounted,
   onUnmounted,
   provide,
-  proxyRefs,
+  reactive,
   ref,
   shallowRef,
   watchEffect,
-} from "vue-demi";
+} from "vue";
 import DataLoader from "@/components/inputs/DataLoader.vue";
 import ParCoords from "@/components/dataviz/ParCoords/ParCoords.vue";
 import { usePapaParse } from "./usePapaParse";
@@ -167,7 +167,7 @@ event
 
       onMounted(() => {
         window.usePapa = papaLoader;
-        window.fields = proxyRefs(fields);
+        window.fields = reactive(fields);
 
         watchEffect(() => {
           if (papaLoader.status.loaded) {
@@ -273,7 +273,7 @@ event
         download: () => {
           downloadAsCsv(par.value.cf.allFiltered(), "all-filtered.csv");
         },
-        options: proxyRefs({
+        options: reactive({
           amount,
           orderOn,
           asc,

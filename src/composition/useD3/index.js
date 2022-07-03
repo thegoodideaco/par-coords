@@ -1,6 +1,6 @@
 import { noop, tryOnScopeDispose } from '@vueuse/core'
 import { scaleLinear } from 'd3'
-import { computed, ref, shallowRef, triggerRef, unref, watch, watchEffect } from 'vue-demi'
+import { computed, ref, shallowRef, triggerRef, unref, watch, watchEffect } from 'vue'
 
 export function useScale(baseScale = scaleLinear()) {
   const domainMin = ref(0)

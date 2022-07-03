@@ -1,5 +1,5 @@
 import { Adder, sum } from 'd3'
-import { defineComponent, proxyRefs, reactive, ref, shallowReactive, shallowRef, toRefs } from 'vue-demi'
+import { defineComponent, reactive, ref, shallowReactive, shallowRef, toRefs } from 'vue'
 import { asyncDelay } from '../useAsyncUntil'
 import { useBatchProcessing } from '../useD3'
 

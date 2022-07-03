@@ -96,7 +96,7 @@ import {
   inject,
   ref,
   shallowRef
-} from 'vue-demi'
+} from 'vue'
 import {
   pack, treemap
 } from 'd3-hierarchy'

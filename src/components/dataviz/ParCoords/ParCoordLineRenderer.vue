@@ -33,7 +33,7 @@ import { line } from 'd3-shape'
 import { curveMethods } from '@/utils/curveMethods'
 import { scaleLinear, scalePoint } from 'd3-scale'
 import { capitalize } from 'lodash'
-import { computed, defineComponent, ref, watchEffect } from 'vue-demi'
+import { computed, defineComponent, ref, watchEffect } from 'vue'
 import chroma from 'chroma-js'
 export default defineComponent({
   props: {

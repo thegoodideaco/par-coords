@@ -13,7 +13,7 @@
 <script>
 import {
   computed, defineComponent, onBeforeMount, provide, shallowRef, watchEffect
-} from 'vue-demi'
+} from 'vue'
 import DataSection from './sections/DataSection.vue'
 import GroupingSection from './sections/GroupingSection.vue'
 import LayoutOptionsSection from './sections/LayoutOptionsSection.vue'

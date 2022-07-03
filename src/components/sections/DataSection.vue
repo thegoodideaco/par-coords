@@ -50,7 +50,7 @@ import {
   ref,
   shallowRef,
   watchPostEffect
-} from 'vue-demi'
+} from 'vue'
 import {
   csvParse
 } from 'd3-dsv'

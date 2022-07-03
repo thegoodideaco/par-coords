@@ -1,5 +1,5 @@
 import { AsYouType } from 'libphonenumber-js'
-import { computed, reactive, ref, watchEffect } from 'vue-demi'
+import { computed, reactive, ref, watchEffect } from 'vue'
 
 /**
  * Provides an autoformatted ref with a validator ref

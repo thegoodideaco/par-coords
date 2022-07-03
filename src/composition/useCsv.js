@@ -2,7 +2,7 @@ import { CSV_PATHS } from '@/config'
 import { tryOnScopeDispose } from '@vueuse/core'
 import { csv } from 'd3'
 import Papa from 'papaparse/papaparse'
-import { computed, effectScope, proxyRefs, ref, shallowRef, unref, watchEffect } from 'vue-demi'
+import { computed, effectScope, reactive, ref, shallowRef, unref, watchEffect } from 'vue'
 
 export function useCSV({
   paths = CSV_PATHS,
@@ -42,7 +42,7 @@ export function useCSV({
 
   const watcher = watchEffect(() => load(activeUrl.value))
 
-  return proxyRefs({
+  return reactive({
     index,
     activeUrl,
     loading,
@@ -76,10 +76,10 @@ export function usePapaParseLoader() {
     return cur / total
   })
 
-  /** @type {typeof import('vue-demi').EffectScope | null} */
+  /** @type {typeof import('vue').EffectScope | null} */
   let scope
 
-  /** @type {import('vue-demi').Ref<import('papaparse').Parser>} */
+  /** @type {import('vue').Ref<import('papaparse').Parser>} */
   const parser = shallowRef()
 
   const abort = () => {

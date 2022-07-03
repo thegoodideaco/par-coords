@@ -12,7 +12,7 @@ import { brushY } from 'd3-brush'
 import * as dSelection from 'd3-selection'
 import { scaleLinear } from 'd3-scale'
 import debounce from 'lodash/debounce'
-import { defineComponent } from 'vue-demi'
+import { defineComponent } from 'vue'
 // import { ascending } from 'd3'
 export default defineComponent({
   model: {

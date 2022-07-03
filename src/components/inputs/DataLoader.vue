@@ -33,7 +33,7 @@
 import { csvParse, tsvParse } from 'd3-dsv'
 import {
   defineComponent
-} from 'vue-demi'
+} from 'vue'
 
 /**
  * The file loader component provides a simple wrapper that loads file data.

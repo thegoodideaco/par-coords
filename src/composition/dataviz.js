@@ -1,4 +1,4 @@
-import { computed, readonly, ref, shallowRef, triggerRef } from 'vue-demi'
+import { computed, readonly, ref, shallowRef, triggerRef } from 'vue'
 import crossfilter from 'crossfilter2'
 import { scalePow } from 'd3'
 import { tryOnScopeDispose } from '@vueuse/core'
@@ -55,7 +55,7 @@ export function useCrossfilterOld(cfInstance, dataset, dimensions) {
   const extents = computed(() => Array.from(dimensionObjects.value, getExtent))
 
   /**
-   * @type {import('vue-demi').ComputedRef<d3.ScaleLinear<[number, number], [number, number]>[]>}
+   * @type {import('vue').ComputedRef<d3.ScaleLinear<[number, number], [number, number]>[]>}
    */
   const scales = computed(() => Array.from(extents.value, (e) => {
     console.log('updating scales')

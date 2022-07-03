@@ -80,7 +80,7 @@ import { useCrossfilterOld } from '@/composition/dataviz'
 import { useGroupAll, useTopList } from '@/composition/useCrossfilter'
 import crossfilter from 'crossfilter2'
 import { scalePoint } from 'd3-scale'
-import { computed, defineComponent, inject, ref, watch } from 'vue-demi'
+import { computed, defineComponent, inject, ref, watch } from 'vue'
 import DimensionColumn from './DimensionColumn.vue'
 import ParCoordLineRenderer from './ParCoordLineRenderer.vue'
 
@@ -207,7 +207,7 @@ export default defineComponent({
         .padding(0)
     )
 
-    /** @type {import('vue-demi').Ref<number>} */
+    /** @type {import('vue').Ref<number>} */
 
     watch(heightRef, updateYScales, { immediate: true })
 

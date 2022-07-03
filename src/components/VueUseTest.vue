@@ -10,7 +10,7 @@ import {
   useMouse,
   usePreferredDark
 } from '@vueuse/core'
-import { defineComponent, proxyRefs } from 'vue-demi'
+import { defineComponent, reactive } from 'vue'
 
 export default defineComponent({
   setup() {
@@ -27,7 +27,7 @@ export default defineComponent({
     })
 
     return {
-      testData: proxyRefs({
+      testData: reactive({
         x,
         y,
         isDark,

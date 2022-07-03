@@ -33,7 +33,7 @@ import {
 } from '@/config'
 import {
   defineComponent, ref, watchPostEffect
-} from 'vue-demi'
+} from 'vue'
 import {
   csv
 } from 'd3-fetch'

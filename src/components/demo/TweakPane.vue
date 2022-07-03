@@ -14,7 +14,7 @@ import {
   reactive,
   ref,
   shallowRef
-} from '@vue/composition-api'
+} from 'vue'
 import { Pane, ListApi } from 'tweakpane'
 import * as EssentialsPlugin from '@tweakpane/plugin-essentials'
 import chroma from 'chroma-js'

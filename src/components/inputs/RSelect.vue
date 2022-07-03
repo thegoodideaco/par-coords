@@ -38,7 +38,7 @@
 <script>
 import {
   computed, defineComponent, ref
-} from 'vue-demi'
+} from 'vue'
 
 export default defineComponent({
   model: {

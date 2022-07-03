@@ -3,13 +3,12 @@ import crossfilter from 'crossfilter2'
 import {
   computed,
   markRaw,
-  proxyRefs,
   reactive,
   ref,
   shallowRef,
   unref,
   watch
-} from 'vue-demi'
+} from 'vue'
 
 /**
  * Create a crossfilter instance,
@@ -181,7 +180,7 @@ export function useGroupAll(cfInstance, summarizer, createOn = cfInstance) {
     groupRef.value.reduceSum(summarizer)
   }
 
-  /** @type {import('vue-demi').Ref<number>} */
+  /** @type {import('vue').Ref<number>} */
   const totalFiltered = ref(groupRef.value.value())
 
   const { onChange } = useChangeEvents(cfInstance)
@@ -208,7 +207,7 @@ export function useTopList(
     offset: 0
   }
 ) {
-  const optionRef = proxyRefs(options)
+  const optionRef = reactive(options)
 
   const { amount, offset } = toRefs(optionRef)
 

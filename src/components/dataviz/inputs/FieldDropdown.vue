@@ -7,7 +7,7 @@
 <script>
 import RSelect from '@/components/inputs/RSelect.vue'
 import chroma from 'chroma-js'
-import { computed, defineComponent, inject, readonly, ref, watchEffect } from 'vue-demi'
+import { computed, defineComponent, inject, readonly, ref, watchEffect } from 'vue'
 export default defineComponent( {
   components: { RSelect },
   setup(props, { emit }) {

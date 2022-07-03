@@ -1,6 +1,6 @@
-import Vue from 'vue'
-import * as demi from 'vue-demi'
-import VueCompositionApi, * as composition from '@vue/composition-api'
+import Vue, * as composition from 'vue'
+// import * as demi from 'vue'
+// import VueCompositionApi, * as composition from '@vue/composition-api'
 import './styles'
 import './global-components'
 
@@ -13,8 +13,8 @@ Vue.prototype.toJSON = function () {
   return this
 }
 
-Vue.use(VueCompositionApi)
-Vue.use(demi)
+// Vue.use(VueCompositionApi)
+// Vue.use(demi)
 
 Vue.filter('asNumber', (val, _format = ',.0f') => format(_format)(val || 0) )
 
@@ -49,7 +49,7 @@ if (process.env.NODE_ENV === 'development') {
       d3:                 require('d3'),
       d3ar:               require('d3-array'),
       composition,
-      demi,
+      // demi,
       CSV_PATHS,
       loadCsv,
       vueUse:             require('@vueuse/core'),

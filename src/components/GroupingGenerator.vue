@@ -55,10 +55,11 @@ import {
   computed,
   defineComponent,
   onBeforeMount,
-  proxyRefs,
+  reactive,
   ref,
   watchPostEffect
-} from 'vue-demi'
+} from 'vue'
+
 import Draggable from 'vuedraggable'
 import RSelect from './inputs/RSelect.vue'
 import sampleSize from 'lodash/sampleSize'
@@ -91,7 +92,7 @@ export default defineComponent({
   }) {
     const {
       keys, valueAccessor
-    } = proxyRefs(props)
+    } = reactive(props)
     const sortedKeys = ref([])
     const localKeys = ref()
 
@@ -116,7 +117,7 @@ export default defineComponent({
             )
 
             return {
-              ...proxyRefs({
+              ...reactive({
                 records: ar,
                 sum:     _sum,
                 count:   ar.length

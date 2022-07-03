@@ -6,7 +6,7 @@
 
 <script>
 import crossfilter from 'crossfilter2'
-import { defineComponent, provide, readonly } from 'vue-demi'
+import { defineComponent, provide, readonly } from 'vue'
 import dataset from '@/components/demo/records.json'
 
 export default defineComponent({

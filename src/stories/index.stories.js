@@ -5,7 +5,7 @@ import { action } from '@storybook/addon-actions'
 import { linkTo } from '@storybook/addon-links'
 import { AsYouType } from 'libphonenumber-js'
 import { omit, random } from 'lodash'
-import { defineComponent, ref } from 'vue-demi'
+import { defineComponent, ref } from 'vue'
 
 import MyButton from '../components/MyButton.vue'
 

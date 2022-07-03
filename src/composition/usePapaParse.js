@@ -1,17 +1,17 @@
 
 import { Adder } from 'd3'
 import Papa from 'papaparse'
-import { computed, proxyRefs, reactive, readonly, ref, shallowRef } from 'vue-demi'
+import { computed, reactive, readonly, ref, shallowRef } from 'vue'
 
 /**
  *
  * @param {Omit<Papa.ParseAsyncConfig, "worker" | "step">} options
  */
 export function usePapaParse(options = {}) {
-  /** @type {import('vue-demi').Ref<Papa.Parser | null>} */
+  /** @type {import('vue').Ref<Papa.Parser | null>} */
   const _parser = shallowRef()
 
-  /** @type {import('vue-demi').Ref<ReturnType<createFieldSummaryObjects>} */
+  /** @type {import('vue').Ref<ReturnType<createFieldSummaryObjects>} */
   const fields = ref()
 
   // info
@@ -237,7 +237,7 @@ export function usePapaParse(options = {}) {
     }
   }
 
-  return proxyRefs({
+  return reactive({
     load,
     controls,
     summary,

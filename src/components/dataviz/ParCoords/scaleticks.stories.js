@@ -1,6 +1,6 @@
 import { useScale } from '@/composition/useD3'
 import { scaleLinear } from 'd3'
-import { computed, defineComponent, proxyRefs, reactive } from 'vue-demi'
+import { computed, defineComponent,  reactive } from 'vue'
 import ScaleTicks from './ScaleTicks.vue'
 
 

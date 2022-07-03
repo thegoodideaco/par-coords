@@ -39,7 +39,7 @@ import {
   computed,
   defineComponent,
   shallowRef
-} from 'vue-demi'
+} from 'vue'
 import GroupViewer from '@/components/GroupViewer.vue'
 import SidePanel from '@/components/SidePanel.vue'
 import VueUseTest from '@/components/VueUseTest.vue'
@@ -75,7 +75,7 @@ export default defineComponent({
       return Array.from(_nodes, n => String(n.data[0]) || 'NULL').join('/')
     })
 
-    /** @type {import('vue-demi').Ref<(dataset: any[]) => any>} */
+    /** @type {import('vue').Ref<(dataset: any[]) => any>} */
     const groupFn = shallowRef()
 
     const groupData = shallowRef()

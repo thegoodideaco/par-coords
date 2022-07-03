@@ -39,7 +39,7 @@
 
 <script>
 // import { nice } from 'd3-array'
-import { defineComponent } from 'vue-demi'
+import { defineComponent } from 'vue'
 import TickMarks from './TickMarks.vue'
 import YBrush from './YBrush.vue'
 /**

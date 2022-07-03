@@ -34,10 +34,10 @@ import {
   defineComponent,
   onBeforeUnmount,
   onMounted,
-  proxyRefs,
+  reactive,
   shallowRef,
   watch
-} from 'vue-demi'
+} from 'vue'
 import {
   extent
 } from 'd3-array'
@@ -81,15 +81,15 @@ export default defineComponent({
   }) {
     const {
       group, layout, options
-    } = proxyRefs(props)
+    } = reactive(props)
 
     const padding = computed(() => options?.padding)
 
-    /** @type {import('vue-demi').Ref<(d3.HierarchyCircularNode & d3.HierarchyRectangularNode)>} */
+    /** @type {import('vue').Ref<(d3.HierarchyCircularNode & d3.HierarchyRectangularNode)>} */
     const h = shallowRef()
 
     /**
-     * @type {import('vue-demi').ComputedRef<typeof h.value[]>}
+     * @type {import('vue').ComputedRef<typeof h.value[]>}
      */
     const allNodes = computed({
       get() {
@@ -113,7 +113,7 @@ export default defineComponent({
 
     const leafExtent = computed(() => leafNodes.value && extent(Float64Array.from(leafNodes.value, n => n.value)))
 
-    /** @type {import('vue-demi').Ref<HTMLElement>} */
+    /** @type {import('vue').Ref<HTMLElement>} */
     const containerEl = shallowRef()
 
     const dimensions = shallowRef([

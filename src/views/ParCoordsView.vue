@@ -175,7 +175,7 @@ import {
   ref,
   shallowRef,
   watchPostEffect
-} from 'vue-demi'
+} from 'vue'
 export default defineComponent({
   name:       'ParCoordsView',
   components: {

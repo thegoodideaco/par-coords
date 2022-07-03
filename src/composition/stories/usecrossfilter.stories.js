@@ -1,4 +1,4 @@
-import { defineComponent, getCurrentInstance, proxyRefs, reactive, shallowRef, toRefs, watchEffect } from "vue-demi";
+import { defineComponent, getCurrentInstance, reactive, shallowRef, toRefs, watchEffect } from "vue";
 import useCrossfilter, { useDimension } from "../useCrossfilter";
 import CsvSelect from "@/components/inputs/CsvSelect.vue";
 import { tryOnBeforeMount } from '@vueuse/core';

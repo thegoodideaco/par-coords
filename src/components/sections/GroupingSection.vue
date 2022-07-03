@@ -17,7 +17,7 @@
 <script>
 import {
   computed, defineComponent, inject, ref
-} from 'vue-demi'
+} from 'vue'
 import GroupingGenerator from '../GroupingGenerator.vue'
 import SectionHeading from './SectionHeading.vue'
 export default defineComponent({

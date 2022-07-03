@@ -14,13 +14,17 @@ d3.nest()
 {object: ƒ, map: ƒ, entries: ƒ, key: ƒ, sortKeys: ƒ, …}
 ```
 
+`object`, `map`, and `entries` methods are meant to return a grouped value from a dataset, but in different formats.
+
+the `key` method _chains_ value accessor functions in the order that you want to group things.
+
 ## With `d3.group` or `d3.groups`
 
-On the other hand, `d3.group` initiates the grouping immediately, and returns an `InternMap`, similar to the `map` function of nest.
+On the other hand, `d3.group` initiates the grouping immediately via parameters, and returns an `InternMap`, similar to the `map` function of nest.
 
 `d3.groups` returns the same, but as an entry array as values instead of a map, similar to `nest.entries`
 
-This groups everything the same, but immediately returns the result as an InternMap or an entry array.
+These functions require the dataset, and other configurations upfront, whereas `d3.nest` returns an object with extended functionality.
 
 ```js
 ƒ group(values, ...keys)
@@ -45,7 +49,9 @@ d3.hierarchy({ key: 'root', values: nester.entries(dataset) }, (n) => n.values)
 
 ### New Way
 
-Fortunately, we can pass an InternMap as the root source to the hierarchy function, and it will generate a hierarchy just the same.
+Instead, we can pass an `d3.group` directly as the root source to the hierarchy function, and it will generate a hierarchy just the same.
+
+The only difference is the data values will be Maps instead of Objects
 
 ```js
 d3.hierarchy(
@@ -61,6 +67,12 @@ d3.hierarchy(
 
 The idea is to observe an array of keys that determine how the data will be grouped, and recalculate the groupings based on their order.
 
+When these groupings change, a hierarchy is generated, and a layout is applied.
+
+If the layout changes, we only want to rerun the layout, not recreate the hierarchy.
+
+This approach is used for both implementations
+
 ### With Nest
 
 With nest, we created a computed property that returned a reactive nest object. Anytime the order of keys would change, this would return a fresh nester object
@@ -71,7 +83,7 @@ With nest, we created a computed property that returned a reactive nest object. 
 
 ### With group
 
-Using group, we call it directly, and it returns a group immediately. Instead of returning an object with a grouping method, we return a method instead.
+Using group, we call it directly, and it returns a group immediately. Instead of returning an object with a grouping method, we return the group itself as an `InternMap`.
 
 ```js
 
@@ -87,4 +99,8 @@ P.S
 
 There's many different ways to approach this, but keep in mind of Vue's reactivity approach, and large datasets..
 
-The dataset itself shouldn't be fully reactive, as well as groups generated from your key order. Passing around methods that return objects instead of the objects themselves. Or using something like the composition api, you can take advantage of shallowRefs, and markRaw to avoid observing too many things.
+The dataset itself shouldn't be fully reactive, as well as groups generated from your key order.
+
+In this example, we separate layout styling computations from the hierarchy ones.
+
+We don't want to regenerate the hierarchy every time we change the layout, we only want to regenerate when the key orders change.

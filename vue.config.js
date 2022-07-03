@@ -184,6 +184,17 @@ module.exports = {
       .type('javascript/auto')
 
     /**
+     * * Markdown File Configuration
+     */
+    config.module
+      .rule('csv')
+      .test(/\.csv$/)
+      .use('raw-loader')
+      .loader('raw-loader')
+      .end()
+      .type('javascript/auto')
+
+    /**
      * Import fragment shaders
      */
     config.module

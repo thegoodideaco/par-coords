@@ -18,6 +18,8 @@ const MainView = (args, { argTypes }) =>
   <div>
   <h2>{{totalFiltered | asNumber}} / {{total | asNumber}}</h2>
 
+  <p>{{extent}}</p>
+
 
   <csv-select @input="actions.add($event.data)" />
   <pre>{{topRecords}}</pre>
@@ -31,6 +33,9 @@ const MainView = (args, { argTypes }) =>
       const csvData = shallowRef();
       const cfOptions = reactive(useCrossfilter());
 
+
+
+      // Create a default dimension of liveness?
       const { extent, filter } = useDimension(
         cfOptions.cf,
         (r,i,arr) => {
@@ -45,12 +50,10 @@ const MainView = (args, { argTypes }) =>
         }
       );
 
-      console.log('setting up')
 
-      tryOnBeforeMount(() => {
-        console.log('before mount')
-      })
-
+      /**
+       * If the records change, we add them to crossfilter
+       */
       watchEffect(() => {
         const records = csvData.value?.data;
 

@@ -151,10 +151,11 @@ export default defineComponent({
     selectedKey: null
   }),
   computed: {
-    /** @type {() => Record<string, any>} */
+    /** @type {() => import('sortablejs').SortableOptions} */
     sortOptions() {
       return {
-        animation: 100
+        animation: 100,
+        easing:    'ease-in-out'
       }
     },
 

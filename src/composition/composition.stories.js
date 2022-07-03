@@ -27,13 +27,7 @@ export default {
   },
 };
 
-function asyncDelay(ms = 1000) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, ms);
-  });
-}
+
 
 
 /** @type {import('@storybook/vue').Story} */
@@ -301,9 +295,6 @@ event
             header: true,
             transformHeader: (val) => String(val).trim(),
             chunk: async ({ data, errors, meta }, parser) => {
-              // await asyncDelay(100);
-
-              // console.log({data, errors, meta})
 
               if (errors.length) {
                 parser.abort();

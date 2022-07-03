@@ -1,5 +1,6 @@
 import { Adder, sum } from 'd3'
 import { defineComponent, proxyRefs, reactive, ref, shallowReactive, shallowRef, toRefs } from 'vue-demi'
+import { asyncDelay } from '../useAsyncUntil'
 import { useBatchProcessing } from '../useD3'
 
 /** @type {import('@storybook/vue').Meta} */
@@ -8,11 +9,6 @@ const meta = {
 }
 
 
-function asyncDelay(ms = 1000) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms)
-  })
-}
 
 
 /**
@@ -78,7 +74,7 @@ template: `
 hey {{status}} - {{sum}}
 
 <div class="flex gap-10">
-  <button @click="randomize()">Randomize</button>
+  <button class="btn btn-link" @click="randomize()">Randomize</button>
   <button @click="start()">Randomize</button>
 
 

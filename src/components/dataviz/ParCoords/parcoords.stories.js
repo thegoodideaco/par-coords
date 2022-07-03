@@ -112,7 +112,11 @@ export const defaultView = (args, { argTypes }) =>
 
       const par = ref();
 
+      const len = computed(() => par.value?.totalFiltered)
+
       const _records = shallowRef(records);
+
+      const clear = () => par.value?.clearFilters()
 
       const { greater } = useBreakpoints(breakpointsTailwind);
 
@@ -138,25 +142,35 @@ export const defaultView = (args, { argTypes }) =>
         return (record) => baseScale(record[props.colorizeOn]);
       });
 
+
+      const filterApplied = computed(() => len.value > 0)
+
       return {
         el,
+        par,
+        len,
         records: _records,
         l: greater("md"),
         colorGen,
         brewerColors,
         fixedCurve: curve,
         args,
-        argTypes
+        argTypes,
+        clear,
+        filterApplied
       };
-    },
-    methods: {
-      clear(index) {
-        this.$refs.par.columns[index].$emit("input", null);
-      },
     },
     props: Object.keys(argTypes).filter((k) => !["tick"].includes(k)),
     template: `
     <div class="m-auto pt-40 px-32 max-w-7xl select-none" style="min-width: 700px" ref="el">
+
+<div class="title p-5 text-center text-white bold">
+{{len}} filtered <br/>
+<button class="btn btn-primary" @click="clear" :disabled="!filterApplied">
+clear all
+</button>
+</div>
+
     <par-coords
       ref="par"
       v-bind="$props"
@@ -166,7 +180,7 @@ export const defaultView = (args, { argTypes }) =>
       :curve="fixedCurve"
       :dataset="() => records"
     >
-      <span slot="tick:acousticness" slot-scope="{tick}"> {{tick}} </span>
+      <span slot="tick:acousticness" slot-scope="{tick}"> {{tick}} !</span>
 
       <template #footer="{value, index}">
         <p class="small">{{fields[index]}}</p>
@@ -181,5 +195,16 @@ export const defaultView = (args, { argTypes }) =>
   </div>
     `,
   });
+
+
+
+
+  /** @type {import('@storybook/vue').Story} */
+  export const usingCanvas = defaultView.bind({})
+  usingCanvas.args = {
+    ...usingCanvas.args,
+    useCanvas: true
+  }
+
 
 export default meta;

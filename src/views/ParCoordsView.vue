@@ -157,7 +157,7 @@
 </template>
 
 <script>
-import ColorDropdown from '@/components/dataviz/inputs/ColorDropdown.vue'
+// import ColorDropdown from '@/components/dataviz/inputs/ColorDropdown.vue'
 import ParCoords from '@/components/dataviz/ParCoords/ParCoords.vue'
 import TweakPane from '@/components/demo/TweakPane.vue'
 import CsvSelect from '@/components/inputs/CsvSelect.vue'
@@ -182,7 +182,7 @@ export default defineComponent({
     CsvSelect,
     ParCoords,
     DataLoader,
-    ColorDropdown,
+    // ColorDropdown,
     TweakPane
   },
   setup() {

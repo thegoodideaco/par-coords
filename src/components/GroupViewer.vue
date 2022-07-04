@@ -34,7 +34,6 @@ import {
   defineComponent,
   onBeforeUnmount,
   onMounted,
-  reactive,
   shallowRef,
   watch
 } from 'vue'
@@ -79,9 +78,10 @@ export default defineComponent({
   setup(props, {
     emit
   }) {
+    // eslint-disable-next-line vue/no-setup-props-destructure
     const {
       group, layout, options
-    } = reactive(props)
+    } = props
 
     const padding = computed(() => options?.padding)
 

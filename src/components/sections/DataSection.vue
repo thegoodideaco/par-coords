@@ -81,7 +81,7 @@ export default defineComponent({
       records.value = null
       const _text = data
 
-      const val = csvParse(_text)
+      const val = typeof _text === 'string' ? csvParse(_text) : _text
 
       if (process.env.NODE_ENV === 'development') {
         globalThis.dataset = val

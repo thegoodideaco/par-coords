@@ -26,10 +26,11 @@
 
 <script>
 import { nest } from 'd3-collection-nest'
-import { group, groups } from 'd3-array'
+import { group } from 'd3-array'
+// eslint-disable-next-line import/no-absolute-path
 import csvdata from '/public/datasets/pokemon/pokemon.csv'
 import { csvParse } from 'd3-dsv'
-import { hierarchy, treemap, treemapBinary, treemapResquarify, treemapSliceDice, treemapSquarify } from 'd3-hierarchy'
+import { hierarchy, treemap, treemapBinary } from 'd3-hierarchy'
 
 const dataset = csvParse(csvdata)
 Object.assign(window, {

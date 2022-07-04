@@ -2,41 +2,63 @@
 
 In the newest release of d3 (7) nest is no longer included.
 
-Nest used to be the way we would configure multilevel grouping, and although we can still group multiple levels, the way it is used is slightly different.
+Nest used to be the way we would configure multilevel grouping, and although we can still
+group multiple levels, the way it is used is slightly different.
+
+Keep in mind that nest is still available, as part of the `d3-collection` package.
+The newer grouping and rollup functions are part of the `d3-array` package.
 
 ## With `d3.nest`
 
-d3.nest returns an object with additional functions to modify the grouping, and doesn't actually perform the grouping until data is passed to one of the methods.
+d3.nest returns an object with additional functions to modify the grouping, and doesn't
+actually perform the grouping until data is passed to one of the methods.
 
-```js
+```javascript
 d3.nest()
 ...
 {object: ƒ, map: ƒ, entries: ƒ, key: ƒ, sortKeys: ƒ, …}
 ```
 
-`object`, `map`, and `entries` methods are meant to return a grouped value from a dataset, but in different formats.
+### What are these methods?
 
-the `key` method _chains_ value accessor functions in the order that you want to group things.
+These methods are a mixture of `input` and `output` utilities that define how you want to group, and how the returned value will be.
+
+#### Input
+
+the `key` method _chains_ value accessor functions in the order that you want to group things, as wll as `sortKeys` and `sortValues` to define the order of the returned value
+
+#### Output
+
+`object`, `map`, and `entries` methods are meant to return a grouped value
+from a dataset, but in different formats.
 
 ## With `d3.group` or `d3.groups`
 
-On the other hand, `d3.group` initiates the grouping immediately via parameters, and returns an `InternMap`, similar to the `map` function of nest.
+On the other hand, `d3.group` initiates the grouping immediately via parameters, and returns
+an `InternMap`, similar to the `map` function of nest.
 
 `d3.groups` returns the same, but as an entry array as values instead of a map, similar to `nest.entries`
 
-These functions require the dataset, and other configurations upfront, whereas `d3.nest` returns an object with extended functionality.
+These functions require the dataset, and other configurations upfront,
+whereas `d3.nest` returns an object you can define options individually.
 
-```js
+```javascript
 ƒ group(values, ...keys)
 ...
 InternMap
 ```
 
+---
+
 ## Working wth d3.hierarchy
+
+when passing grouped values to the hierarchy function, using a d3.group instance works out of the box.
+
+However for nest, we use the entries method, and wrap it with a fake "root node"
 
 ### Old way
 
-Using d3.nest, we pass the entries inside of a root entry object:
+Using `d3.nest`, we pass the entries inside of a root entry object:
 
 ```js
 nester = d3
@@ -44,52 +66,117 @@ nester = d3
   .key((record) => record.type)
   .key((record) => record.level)
 
-d3.hierarchy({ key: 'root', values: nester.entries(dataset) }, (n) => n.values)
+const values = nester.entries(dataset)
+
+d3.hierarchy({ key: 'root', values }, (n) => n.values)
 ```
 
 ### New Way
 
-Instead, we can pass an `d3.group` directly as the root source to the hierarchy function, and it will generate a hierarchy just the same.
+Instead, we can pass an `d3.group` directly as the root source to the hierarchy function,
+and it will generate a hierarchy just the same.
 
-The only difference is the data values will be Maps instead of Objects
+The only difference is the data values will be _Maps_ instead of _Objects_.
 
 ```js
-d3.hierarchy(
-  d3.group(
-    dataset,
-    (record) => record.type,
-    (record) => record.level
-  )
+const rootGroup = d3.group(
+  dataset,
+  (record) => record.type,
+  (record) => record.level
 )
+
+d3.hierarchy(rootGroup)
 ```
+
+_`Rollup` is also available as a separate function, with `rollups` as it's entries counterpart, as well as `groupSort`_
 
 ## Vue Reactivity
 
-The idea is to observe an array of keys that determine how the data will be grouped, and recalculate the groupings based on their order.
+The idea is to observe an array of `valueOf` accessor methods that determine how the data will be grouped, and recalculate the groupings based on their order.
 
-When these groupings change, a hierarchy is generated, and a layout is applied.
+An accessor method mimics the
 
-If the layout changes, we only want to rerun the layout, not recreate the hierarchy.
-
-This approach is used for both implementations
-
-### With Nest
-
-With nest, we created a computed property that returned a reactive nest object. Anytime the order of keys would change, this would return a fresh nester object
-
-```js
-
+```javascript
+export default {
+  data: () => ({
+    keys: ['name', 'age'],
+  }),
+  computed: {
+    groupFunctions() {
+      return Array.from(this.keys, (key) => (record) => record[key])
+    },
+  },
+}
 ```
 
-### With group
+In this case, whenever the keys change, the groupFunctions update,
+and we can apply a grouped object using either nest or group.
 
-Using group, we call it directly, and it returns a group immediately. Instead of returning an object with a grouping method, we return the group itself as an `InternMap`.
+```javascript
+export default {
+  data: () => ({
+    keys: ['name', 'age'],
+  }),
+  computed: {
+    groupFunctions() {
+      return Array.from(this.keys, (key) => (record) => record[key])
+    },
+    dataUsingNest() {
+      const nester = d3.nest()
 
-```js
+      for (let accessor of this.groupFunctions) {
+        nester.key(accessor)
+      }
 
+      return nester.entries(this.dataset)
+    },
+    dataUsingGroup() {
+      return d3.group(this.dataset, ...this.groupFunctions)
+    },
+  },
+}
 ```
 
-### Breakdown
+When these groupings change, a hierarchy is generated.
+
+```javascript
+export default {
+  data: () => ({
+    keys: ['name', 'age'],
+  }),
+  computed: {
+    groupFunctions() {
+      return Array.from(this.keys, (key) => (record) => record[key])
+    },
+    dataUsingNest() {
+      const nester = d3.nest()
+
+      for (let accessor of this.groupFunctions) {
+        nester.key(accessor)
+      }
+
+      return nester.entries(this.dataset)
+    },
+    dataUsingGroup() {
+      return d3.group(this.dataset, ...this.groupFunctions)
+    },
+    nestHierarchy() {
+      return d3.hierarchy(
+        {
+          key: 'root',
+          values: this.dataUsingNest,
+        },
+        (datum) => datum.values
+      )
+    },
+    groupHierarchy() {
+      return d3.hierarchy(this.dataUsingGroup)
+    },
+  },
+}
+```
+
+## Breakdown
 
 1. reactive array of ordered keys
 2. computed grouping function from keys
@@ -99,8 +186,4 @@ P.S
 
 There's many different ways to approach this, but keep in mind of Vue's reactivity approach, and large datasets..
 
-The dataset itself shouldn't be fully reactive, as well as groups generated from your key order.
-
-In this example, we separate layout styling computations from the hierarchy ones.
-
-We don't want to regenerate the hierarchy every time we change the layout, we only want to regenerate when the key orders change.
+The dataset itself shouldn't be fully reactive, as well as groups generated from your key order. Be careful about when the grouping is performed. You only want to generate the grouped hierarchy if the dataset or the key orders change. Other modifiers like hierarchical layouts can provide custom options like padding, but make sure that any layout adjustments will perform on the preexisting hierarchy **without generating a new one**.

@@ -100,9 +100,8 @@ export default defineComponent({
       updateGrouping,
       updateRecords(_records) {
         // console.log(_records)
-        console.log(_records)
+        if (_records) console.log(_records)
         records = !_records ? null : Array.from(_records, r => Object.freeze(r))
-        console.log(_records)
       },
       selectedNodeIndex,
       selectedPath

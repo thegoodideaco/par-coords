@@ -195,6 +195,17 @@ module.exports = {
       .type('javascript/auto')
 
     /**
+     * * zip
+     */
+    config.module
+      .rule('zip')
+      .test(/\.zip$/)
+      .use('raw-loader')
+      .loader('raw-loader')
+      .end()
+      .type('javascript/auto')
+
+    /**
      * Import fragment shaders
      */
     config.module

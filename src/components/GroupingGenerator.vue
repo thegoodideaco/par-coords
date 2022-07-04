@@ -57,6 +57,8 @@ import {
   onBeforeMount,
   reactive,
   ref,
+  toRefs,
+  unref,
   watchPostEffect
 } from 'vue'
 
@@ -91,8 +93,12 @@ export default defineComponent({
     emit
   }) {
     const {
-      keys, valueAccessor
-    } = reactive(props)
+      keys: keyRef, valueAccessor: valueAccessorRef
+    } = toRefs(props)
+
+    const keys = unref(keyRef)
+    const valueAccessor = unref(valueAccessorRef)
+
     const sortedKeys = ref([])
     const localKeys = ref()
 
